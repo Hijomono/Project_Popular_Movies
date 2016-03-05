@@ -8,4 +8,14 @@
     <string name="base_picasso_url">http://image.tmdb.org/t/p/</string>
     <string name="picasso_w185_size">w185</string>
 
+    <!-- Strings related to Settings -->
+
+    <string name="pref_sort_by_label">Sort by</string>
+    <string name="pref_sort_by_key" translatable="false">sort_by</string>
+    <string name="pref_sort_by_popularity" translatable="false">popular</string>
+    <string name="pref_sort_by_rating" translatable="false">top_rated</string>
+    <string name="pref_popularity_label">Popularity</string>
+    <string name="pref_rating_label">User rating</string>
+    <string name="title_activity_settings">Settings</string>
+
 </resources>
