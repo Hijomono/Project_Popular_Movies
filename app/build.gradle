@@ -4,6 +4,10 @@ android {
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
 
+    def keysPropertiesFile = rootProject.file("keys.properties")
+    def keysProperties = new Properties()
+    keysProperties.load(new FileInputStream(keysPropertiesFile))
+
     defaultConfig {
         applicationId "com.example.android.popularmovies"
         minSdkVersion 16
@@ -17,6 +21,13 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    buildTypes.each {
+        it.buildConfigField 'String', 'THE_MOVIE_DB_API_KEY', keysProperties['themoviedbApiKey']
+    }
+}
+
+repositories {
+    mavenCentral()
 }
 
 dependencies {
@@ -24,4 +35,6 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.android.support:design:23.1.1'
+    compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.android.support:support-v4:23.1.1'
 }
