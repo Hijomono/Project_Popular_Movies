@@ -76,7 +76,7 @@ public class MoviesGridFragment extends Fragment {
             // These are the names of the JSON objects that need to be extracted.
             final String TMDB_RESULTS = "results";
             final String TMDB_ID = "id";
-            final String TMDB_TITLE = "title";
+            final String TMDB_TITLE = "original_title";
             final String TMDB_POSTER_PATH = "poster_path";
             final String TMDB_OVERVIEW = "overview";
             final String TMDB_VOTE_AVERAGE = "vote_average";
