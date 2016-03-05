@@ -1,8 +1,10 @@
 package com.example.android.popularmovies;
 
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -34,7 +36,10 @@ public class MoviesGridFragment extends Fragment {
 
     private void updateMovies() {
         FetchMoviesTask moviesTask = new FetchMoviesTask();
-        moviesTask.execute("popularity.desc");
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String moviesSortBy = prefs.getString(getString(R.string.pref_sort_by_key),
+                getString(R.string.pref_sort_by_popularity));
+        moviesTask.execute(moviesSortBy);
     }
 
     @Override
@@ -130,16 +135,9 @@ public class MoviesGridFragment extends Fragment {
 
             try {
                 // Construct the URL for the TheMovieDB query.
-                final String FORECAST_BASE_URL =
-                        "http://api.themoviedb.org/3/discover/movie?";
-                final String ORDER_PARAM = "sort_by";
-                final String APPID_PARAM = "api_key";
+                String theMovieDBUrl = "http://api.themoviedb.org/3/movie/" + params[0] + "?api_key=" + BuildConfig.THE_MOVIE_DB_API_KEY;
 
-                Uri builtUri = Uri.parse(FORECAST_BASE_URL).buildUpon()
-                        .appendQueryParameter(ORDER_PARAM, params[0])
-                        .appendQueryParameter(APPID_PARAM, BuildConfig.THE_MOVIE_DB_API_KEY)
-                        .build();
-
+                Uri builtUri = Uri.parse(theMovieDBUrl);
                 URL url = new URL(builtUri.toString());
 
 
