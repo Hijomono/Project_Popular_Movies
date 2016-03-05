@@ -1,4 +1,11 @@
 <resources>
+
     <string name="app_name">Popular Movies</string>
     <string name="action_settings">Settings</string>
+
+    <!-- Strings used to create image URLs to be loaded with Picasso -->
+
+    <string name="base_picasso_url">http://image.tmdb.org/t/p/</string>
+    <string name="picasso_w185_size">w185</string>
+
 </resources>
