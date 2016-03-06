@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.GridView;
 
 import org.json.JSONArray;
@@ -59,6 +60,13 @@ public class MoviesGridFragment extends Fragment {
 
         GridView gridView = (GridView) rootView.findViewById(R.id.movies_grid);
         gridView.setAdapter(moviesGridAdapter);
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                final Movie movieClicked = moviesGridAdapter.getItem(position);
+                startActivity(MovieDetailsActivity.launchDetailsIntent(movieClicked, getActivity()));
+            }
+        });
 
         return rootView;
     }
