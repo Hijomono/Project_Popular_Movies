@@ -26,14 +26,14 @@ public class MovieDetailsFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_movie_details, container, false);
 
         Movie movie = ((MovieDetailsActivity) getActivity()).getMovie();
-        ((TextView) rootView.findViewById(R.id.detail_title)).setText(movie.title);
+        ((TextView) rootView.findViewById(R.id.detail_title)).setText(movie.getTitle());
         ImageView posterView = ((ImageView) rootView.findViewById(R.id.detail_poster));
-        Uri url = Uri.parse(movie.posterUrl);
+        Uri url = Uri.parse(movie.getPosterUrl());
         Picasso.with(getContext()).load(url).into(posterView);
-        ((TextView) rootView.findViewById(R.id.detail_release_date)).setText(movie.releaseDate);
-        String finalRating = movie.userRating + "/10";
+        ((TextView) rootView.findViewById(R.id.detail_release_date)).setText(movie.getReleaseDate());
+        String finalRating = movie.getUserRating() + "/10";
         ((TextView) rootView.findViewById(R.id.detail_rating)).setText(finalRating);
-        ((TextView) rootView.findViewById(R.id.detail_overview)).setText(movie.plotSynopsis);
+        ((TextView) rootView.findViewById(R.id.detail_overview)).setText(movie.getPlotSynopsis());
 
         return rootView;
     }

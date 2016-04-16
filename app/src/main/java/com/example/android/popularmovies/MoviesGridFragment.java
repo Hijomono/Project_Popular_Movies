@@ -118,7 +118,14 @@ public class MoviesGridFragment extends Fragment {
                 // Create the string that picasso will use as URL
                 posterUrl = getString(R.string.base_picasso_url) + getString(R.string.picasso_w185_size) + posterPath;
 
-                resultMovies[i] = new Movie(id, title, posterUrl, overview, rating, releaseDate);
+                resultMovies[i] = Movie.newBuilder()
+                        .id(id)
+                        .title(title)
+                        .posterUrl(posterUrl)
+                        .plotSynopsis(overview)
+                        .userRating(rating)
+                        .releaseDate(releaseDate)
+                        .build();
             }
 
             return resultMovies;
@@ -131,7 +138,6 @@ public class MoviesGridFragment extends Fragment {
             if (params.length == 0) {
                 return null;
             }
-
 
             // These two need to be declared outside the try/catch
             // so that they can be closed in the finally block.

@@ -24,7 +24,7 @@ public class MoviesAdapter extends ArrayAdapter<Movie> {
     @Override
     public View getView(final int position, View convertView, final ViewGroup parent) {
 
-        Movie movie = getItem(position);
+        final Movie movie = getItem(position);
 
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.list_item_movie, parent, false);
@@ -32,7 +32,7 @@ public class MoviesAdapter extends ArrayAdapter<Movie> {
 
         ImageView posterView = (ImageView) convertView.findViewById(R.id.list_item_poster);
 
-        Uri url = Uri.parse(movie.posterUrl);
+        Uri url = Uri.parse(movie.getPosterUrl());
         Picasso.with(getContext()).load(url).into(posterView);
 
         return  convertView;

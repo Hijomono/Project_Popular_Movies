@@ -7,21 +7,37 @@ import android.os.Parcelable;
  * Created by debeyo on 03/03/2016.
  */
 public class Movie implements Parcelable {
-    int id;
-    String title;
-    String posterUrl;
-    String plotSynopsis;
-    String userRating;
-    String releaseDate;
+    private final int id;
+    private final String title;
+    private final String posterUrl;
+    private final String plotSynopsis;
+    private final String userRating;
+    private final String releaseDate;
 
-    public Movie(int movieId, String movieTitle, String moviePoster, String moviePlot, String movieRating, String movieRelease) {
-        this.id = movieId;
-        this.title = movieTitle;
-        this.posterUrl = moviePoster;
-        this.plotSynopsis = moviePlot;
-        this.userRating = movieRating;
-        this.releaseDate = movieRelease;
+    private Movie(final Builder builder) {
+        id = builder.id;
+        title = builder.title;
+        posterUrl = builder.posterUrl;
+        plotSynopsis = builder.plotSynopsis;
+        userRating = builder.userRating;
+        releaseDate = builder.releaseDate;
     }
+
+    public static Builder newBuilder() {
+        return new Builder();
+    }
+
+    public static Builder newBuilder(final Movie copy) {
+        Builder builder = new Builder();
+        builder.id = copy.id;
+        builder.title = copy.title;
+        builder.posterUrl = copy.posterUrl;
+        builder.plotSynopsis = copy.plotSynopsis;
+        builder.userRating = copy.userRating;
+        builder.releaseDate = copy.releaseDate;
+        return builder;
+    }
+
 
     public int getId() {
         return id;
@@ -75,7 +91,7 @@ public class Movie implements Parcelable {
         parcel.writeString(releaseDate);
     }
 
-    public static final Parcelable.Creator<Movie> CREATOR = new Parcelable.Creator<Movie>() {
+    public static final Creator<Movie> CREATOR = new Creator<Movie>() {
         @Override
         public Movie createFromParcel(final Parcel parcel) {
             return new Movie(parcel);
@@ -86,4 +102,94 @@ public class Movie implements Parcelable {
             return new Movie[i];
         }
     };
+
+    /**
+     * {@code Movie} builder static inner class.
+     */
+    public static final class Builder {
+        private int id;
+        private String title;
+        private String posterUrl;
+        private String plotSynopsis;
+        private String userRating;
+        private String releaseDate;
+
+        private Builder() {
+        }
+
+        /**
+         * Sets the {@code id} and returns a reference to this Builder so that the methods can be chained together.
+         *
+         * @param val the {@code id} to set
+         * @return a reference to this Builder
+         */
+        public Builder id(final int val) {
+            id = val;
+            return this;
+        }
+
+        /**
+         * Sets the {@code title} and returns a reference to this Builder so that the methods can be chained together.
+         *
+         * @param val the {@code title} to set
+         * @return a reference to this Builder
+         */
+        public Builder title(final String val) {
+            title = val;
+            return this;
+        }
+
+        /**
+         * Sets the {@code posterUrl} and returns a reference to this Builder so that the methods can be chained together.
+         *
+         * @param val the {@code posterUrl} to set
+         * @return a reference to this Builder
+         */
+        public Builder posterUrl(final String val) {
+            posterUrl = val;
+            return this;
+        }
+
+        /**
+         * Sets the {@code plotSynopsis} and returns a reference to this Builder so that the methods can be chained together.
+         *
+         * @param val the {@code plotSynopsis} to set
+         * @return a reference to this Builder
+         */
+        public Builder plotSynopsis(final String val) {
+            plotSynopsis = val;
+            return this;
+        }
+
+        /**
+         * Sets the {@code userRating} and returns a reference to this Builder so that the methods can be chained together.
+         *
+         * @param val the {@code userRating} to set
+         * @return a reference to this Builder
+         */
+        public Builder userRating(final String val) {
+            userRating = val;
+            return this;
+        }
+
+        /**
+         * Sets the {@code releaseDate} and returns a reference to this Builder so that the methods can be chained together.
+         *
+         * @param val the {@code releaseDate} to set
+         * @return a reference to this Builder
+         */
+        public Builder releaseDate(final String val) {
+            releaseDate = val;
+            return this;
+        }
+
+        /**
+         * Returns a {@code Movie} built from the parameters previously set.
+         *
+         * @return a {@code Movie} built with parameters of this {@code Movie.Builder}
+         */
+        public Movie build() {
+            return new Movie(this);
+        }
+    }
 }
