@@ -17,6 +17,14 @@ import java.util.List;
  */
 public class MoviesAdapter extends ArrayAdapter<Movie> {
 
+    public static class ViewHolder {
+        public final ImageView moviePosterView;
+
+        public ViewHolder(View view) {
+            moviePosterView = (ImageView) view.findViewById(R.id.list_item_poster);
+        }
+    }
+
     public MoviesAdapter(final Activity context, final List<Movie> movies) {
         super(context,0 , movies);
     }
@@ -29,12 +37,9 @@ public class MoviesAdapter extends ArrayAdapter<Movie> {
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.list_item_movie, parent, false);
         }
-
-        ImageView posterView = (ImageView) convertView.findViewById(R.id.list_item_poster);
-
+        ViewHolder viewHolder = new ViewHolder(convertView);
         Uri url = Uri.parse(movie.getPosterUrl());
-        Picasso.with(getContext()).load(url).into(posterView);
-
+        Picasso.with(getContext()).load(url).into(viewHolder.moviePosterView);
         return  convertView;
     }
 }
