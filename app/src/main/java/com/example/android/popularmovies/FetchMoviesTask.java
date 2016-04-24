@@ -51,7 +51,6 @@ public class FetchMoviesTask extends AsyncTask<String, Void, Movie[]> {
 
         Movie[] resultMovies = new Movie[moviesArray.length()];
         for (int i = 0; i < moviesArray.length(); i++) {
-
             int id;
             String title;
             String posterPath;
@@ -83,14 +82,11 @@ public class FetchMoviesTask extends AsyncTask<String, Void, Movie[]> {
                     .releaseDate(releaseDate)
                     .build();
         }
-
         return resultMovies;
-
     }
 
     @Override
     protected Movie[] doInBackground(final String... params) {
-
         if (params.length == 0) {
             return null;
         }
@@ -105,9 +101,15 @@ public class FetchMoviesTask extends AsyncTask<String, Void, Movie[]> {
 
         try {
             // Construct the URL for the TheMovieDB query.
-            String theMovieDBUrl = "http://api.themoviedb.org/3/movie/" + params[0] + "?api_key=" + BuildConfig.THE_MOVIE_DB_API_KEY;
+            final String TMDB_BASE_URL =
+                    "http://api.themoviedb.org/3/movie/";
+            final String API_KEY_PARAM = "api_key";
 
-            Uri builtUri = Uri.parse(theMovieDBUrl);
+            Uri builtUri = Uri.parse(TMDB_BASE_URL).buildUpon()
+                    .appendPath(params[0])
+                    .appendQueryParameter(API_KEY_PARAM, BuildConfig.THE_MOVIE_DB_API_KEY)
+                    .build();
+
             URL url = new URL(builtUri.toString());
 
 
@@ -161,7 +163,6 @@ public class FetchMoviesTask extends AsyncTask<String, Void, Movie[]> {
             Log.e(LOG_TAG, e.getMessage(), e);
             e.printStackTrace();
         }
-
         return null;
     }
 
