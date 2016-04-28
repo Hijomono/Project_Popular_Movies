@@ -11,10 +11,25 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
  * A placeholder fragment containing a simple view.
  */
 public class MovieDetailsFragment extends Fragment {
+
+    @Bind(R.id.detail_title)
+    TextView title;
+    @Bind(R.id.detail_poster)
+    ImageView poster;
+    @Bind(R.id.detail_release_date)
+    TextView releaseDate;
+    @Bind(R.id.detail_rating)
+    TextView rating;
+    @Bind(R.id.detail_overview)
+    TextView overview;
+
 
     public MovieDetailsFragment() {
     }
@@ -24,16 +39,14 @@ public class MovieDetailsFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_movie_details, container, false);
-
+        ButterKnife.bind(this, rootView);
         Movie movie = ((MovieDetailsActivity) getActivity()).getMovie();
-        ((TextView) rootView.findViewById(R.id.detail_title)).setText(movie.getTitle());
-        ImageView posterView = ((ImageView) rootView.findViewById(R.id.detail_poster));
+        title.setText(movie.getTitle());
         Uri url = Uri.parse(movie.getPosterUrl());
-        Picasso.with(getContext()).load(url).into(posterView);
-        ((TextView) rootView.findViewById(R.id.detail_release_date)).setText(movie.getReleaseDate());
-        String finalRating = movie.getUserRating() + "/10";
-        ((TextView) rootView.findViewById(R.id.detail_rating)).setText(finalRating);
-        ((TextView) rootView.findViewById(R.id.detail_overview)).setText(movie.getPlotSynopsis());
+        Picasso.with(getContext()).load(url).into(poster);
+        releaseDate.setText(movie.getReleaseDate());
+        rating.setText(movie.getUserRating() + "/10");
+        overview.setText(movie.getPlotSynopsis());
 
         return rootView;
     }

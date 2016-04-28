@@ -12,16 +12,20 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
  * Created by debeyo on 03/03/2016.
  */
 public class MoviesAdapter extends ArrayAdapter<Movie> {
 
-    public static class ViewHolder {
-        public final ImageView moviePosterView;
+    static class ViewHolder {
+        @Bind(R.id.list_item_poster)
+        ImageView moviePosterView;
 
         public ViewHolder(View view) {
-            moviePosterView = (ImageView) view.findViewById(R.id.list_item_poster);
+            ButterKnife.bind(this, view);
         }
     }
 
