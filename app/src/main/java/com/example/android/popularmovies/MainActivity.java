@@ -35,7 +35,6 @@ public class MainActivity extends AppCompatActivity {
             startActivity(SettingsActivity.launchSettingsIntent(this));
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 }
