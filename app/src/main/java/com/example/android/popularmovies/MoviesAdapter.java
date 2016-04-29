@@ -12,7 +12,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -21,7 +21,7 @@ import butterknife.ButterKnife;
 public class MoviesAdapter extends ArrayAdapter<Movie> {
 
     static class ViewHolder {
-        @Bind(R.id.list_item_poster)
+        @BindView(R.id.list_item_poster)
         ImageView moviePosterView;
 
         public ViewHolder(View view) {

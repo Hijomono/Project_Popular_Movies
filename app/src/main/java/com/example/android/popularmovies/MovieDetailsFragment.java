@@ -11,24 +11,26 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 /**
  * A placeholder fragment containing a simple view.
  */
 public class MovieDetailsFragment extends Fragment {
 
-    @Bind(R.id.detail_title)
+    @BindView(R.id.detail_title)
     TextView title;
-    @Bind(R.id.detail_poster)
+    @BindView(R.id.detail_poster)
     ImageView poster;
-    @Bind(R.id.detail_release_date)
+    @BindView(R.id.detail_release_date)
     TextView releaseDate;
-    @Bind(R.id.detail_rating)
+    @BindView(R.id.detail_rating)
     TextView rating;
-    @Bind(R.id.detail_overview)
+    @BindView(R.id.detail_overview)
     TextView overview;
+    private Unbinder unbinder;
 
 
     public MovieDetailsFragment() {
@@ -39,15 +41,22 @@ public class MovieDetailsFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_movie_details, container, false);
-        ButterKnife.bind(this, rootView);
+        unbinder = ButterKnife.bind(this, rootView);
         Movie movie = ((MovieDetailsActivity) getActivity()).getMovie();
         title.setText(movie.getTitle());
         Uri url = Uri.parse(movie.getPosterUrl());
         Picasso.with(getContext()).load(url).into(poster);
         releaseDate.setText(movie.getReleaseDate());
-        rating.setText(movie.getUserRating() + "/10");
+        String ratingOutOfTen = movie.getUserRating() + "/10";
+        rating.setText(ratingOutOfTen);
         overview.setText(movie.getPlotSynopsis());
 
         return rootView;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
     }
 }
