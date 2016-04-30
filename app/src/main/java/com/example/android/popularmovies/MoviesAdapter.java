@@ -1,7 +1,6 @@
 package com.example.android.popularmovies;
 
 import android.app.Activity;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,8 +41,7 @@ public class MoviesAdapter extends ArrayAdapter<Movie> {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.list_item_movie, parent, false);
         }
         ViewHolder viewHolder = new ViewHolder(convertView);
-        Uri url = Uri.parse(movie.getPosterUrl());
-        Picasso.with(getContext()).load(url).into(viewHolder.moviePosterView);
+        Picasso.with(getContext()).load(movie.getPicassoUri()).into(viewHolder.moviePosterView);
         return  convertView;
     }
 }

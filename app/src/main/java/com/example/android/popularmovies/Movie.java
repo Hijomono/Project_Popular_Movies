@@ -1,5 +1,6 @@
 package com.example.android.popularmovies;
 
+import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -7,20 +8,23 @@ import android.os.Parcelable;
  * Created by debeyo on 03/03/2016.
  */
 public class Movie implements Parcelable {
+
+    private static final String BASE_PICASSO_URL = "http://image.tmdb.org/t/p/w185";
+
     private final int id;
     private final String title;
-    private final String posterUrl;
-    private final String plotSynopsis;
-    private final String userRating;
-    private final String releaseDate;
+    private final String poster_path;
+    private final String overview;
+    private final String vote_average;
+    private final String release_date;
 
     private Movie(final Builder builder) {
         id = builder.id;
         title = builder.title;
-        posterUrl = builder.posterUrl;
-        plotSynopsis = builder.plotSynopsis;
-        userRating = builder.userRating;
-        releaseDate = builder.releaseDate;
+        poster_path = builder.poster_path;
+        overview = builder.overview;
+        vote_average = builder.vote_average;
+        release_date = builder.release_date;
     }
 
     public static Builder newBuilder() {
@@ -31,10 +35,10 @@ public class Movie implements Parcelable {
         Builder builder = new Builder();
         builder.id = copy.id;
         builder.title = copy.title;
-        builder.posterUrl = copy.posterUrl;
-        builder.plotSynopsis = copy.plotSynopsis;
-        builder.userRating = copy.userRating;
-        builder.releaseDate = copy.releaseDate;
+        builder.poster_path = copy.poster_path;
+        builder.overview = copy.overview;
+        builder.vote_average = copy.vote_average;
+        builder.release_date = copy.release_date;
         return builder;
     }
 
@@ -47,29 +51,29 @@ public class Movie implements Parcelable {
         return title;
     }
 
-    public String getPosterUrl() {
-        return posterUrl;
+    public String getPoster_path() {
+        return poster_path;
     }
 
-    public String getPlotSynopsis() {
-        return plotSynopsis;
+    public String getOverview() {
+        return overview;
     }
 
-    public String getUserRating() {
-        return userRating;
+    public String getVote_average() {
+        return vote_average;
     }
 
-    public String getReleaseDate() {
-        return releaseDate;
+    public String getRelease_date() {
+        return release_date;
     }
 
     private Movie(Parcel in) {
         id = in.readInt();
         title = in.readString();
-        posterUrl = in.readString();
-        plotSynopsis = in.readString();
-        userRating = in.readString();
-        releaseDate = in.readString();
+        poster_path = in.readString();
+        overview = in.readString();
+        vote_average = in.readString();
+        release_date = in.readString();
     }
 
     @Override
@@ -78,17 +82,17 @@ public class Movie implements Parcelable {
     }
 
     public String toString() {
-        return id+ "--" + title + "--" + posterUrl + "--" + plotSynopsis + "--" + userRating + "--" + releaseDate;
+        return id + "--" + title + "--" + poster_path + "--" + overview + "--" + vote_average + "--" + release_date;
     }
 
     @Override
     public void writeToParcel(final Parcel parcel, final int i) {
         parcel.writeInt(id);
         parcel.writeString(title);
-        parcel.writeString(posterUrl);
-        parcel.writeString(plotSynopsis);
-        parcel.writeString(userRating);
-        parcel.writeString(releaseDate);
+        parcel.writeString(poster_path);
+        parcel.writeString(overview);
+        parcel.writeString(vote_average);
+        parcel.writeString(release_date);
     }
 
     public static final Creator<Movie> CREATOR = new Creator<Movie>() {
@@ -109,10 +113,10 @@ public class Movie implements Parcelable {
     public static final class Builder {
         private int id;
         private String title;
-        private String posterUrl;
-        private String plotSynopsis;
-        private String userRating;
-        private String releaseDate;
+        private String poster_path;
+        private String overview;
+        private String vote_average;
+        private String release_date;
 
         private Builder() {
         }
@@ -140,46 +144,46 @@ public class Movie implements Parcelable {
         }
 
         /**
-         * Sets the {@code posterUrl} and returns a reference to this Builder so that the methods can be chained together.
+         * Sets the {@code poster_path} and returns a reference to this Builder so that the methods can be chained together.
          *
-         * @param val the {@code posterUrl} to set
+         * @param val the {@code poster_path} to set
          * @return a reference to this Builder
          */
-        public Builder posterUrl(final String val) {
-            posterUrl = val;
+        public Builder poster_path(final String val) {
+            poster_path = val;
             return this;
         }
 
         /**
-         * Sets the {@code plotSynopsis} and returns a reference to this Builder so that the methods can be chained together.
+         * Sets the {@code overview} and returns a reference to this Builder so that the methods can be chained together.
          *
-         * @param val the {@code plotSynopsis} to set
+         * @param val the {@code overview} to set
          * @return a reference to this Builder
          */
-        public Builder plotSynopsis(final String val) {
-            plotSynopsis = val;
+        public Builder overview(final String val) {
+            overview = val;
             return this;
         }
 
         /**
-         * Sets the {@code userRating} and returns a reference to this Builder so that the methods can be chained together.
+         * Sets the {@code vote_average} and returns a reference to this Builder so that the methods can be chained together.
          *
-         * @param val the {@code userRating} to set
+         * @param val the {@code vote_average} to set
          * @return a reference to this Builder
          */
-        public Builder userRating(final String val) {
-            userRating = val;
+        public Builder vote_average(final String val) {
+            vote_average = val;
             return this;
         }
 
         /**
-         * Sets the {@code releaseDate} and returns a reference to this Builder so that the methods can be chained together.
+         * Sets the {@code release_date} and returns a reference to this Builder so that the methods can be chained together.
          *
-         * @param val the {@code releaseDate} to set
+         * @param val the {@code release_date} to set
          * @return a reference to this Builder
          */
-        public Builder releaseDate(final String val) {
-            releaseDate = val;
+        public Builder release_date(final String val) {
+            release_date = val;
             return this;
         }
 
@@ -191,5 +195,15 @@ public class Movie implements Parcelable {
         public Movie build() {
             return new Movie(this);
         }
+    }
+
+    /**
+     * Creates the Uri to be used by Picasso.
+     *
+     * @return a Uri built with the {@code poster_path} of this {@code Movie}
+     */
+    public Uri getPicassoUri() {
+        String posterUrl = BASE_PICASSO_URL + poster_path;
+        return Uri.parse(posterUrl);
     }
 }
