@@ -22,9 +22,8 @@ public class ServiceProvider {
     }
 
     private static OkHttpClient provideOkHttpClient() {
-        final OkHttpClient client = new OkHttpClient.Builder()
+        return new OkHttpClient.Builder()
                 .addNetworkInterceptor(new StethoInterceptor())
                 .build();
-        return client;
     }
 }
