@@ -4,13 +4,24 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.Toast;
+
+import com.example.android.popularmovies.data.network.FetchedMoviesList;
+import com.example.android.popularmovies.data.network.ServiceProvider;
+import com.example.android.popularmovies.data.network.TheMovieDBService;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * A placeholder fragment containing the grid view where the movie posters will be displayed.
@@ -18,16 +29,44 @@ import java.util.ArrayList;
 public class MoviesGridFragment extends Fragment {
 
     private MoviesAdapter moviesGridAdapter;
+    private Call<FetchedMoviesList> call;
+    private FetchedMoviesList fetchedMoviesList;
+    private List<Movie> moviesList;
 
     public MoviesGridFragment() {
     }
 
     private void updateMovies() {
-        FetchMoviesTask moviesTask = new FetchMoviesTask(getActivity(), moviesGridAdapter);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         String moviesSortBy = prefs.getString(getString(R.string.pref_sort_by_key),
                 getString(R.string.pref_sort_by_popularity));
-        moviesTask.execute(moviesSortBy);
+        TheMovieDBService.TheMovieDBAPI service = ServiceProvider.fetchMoviesService();
+        call = service.getMovieList(moviesSortBy, BuildConfig.THE_MOVIE_DB_API_KEY);
+        call.enqueue(new Callback<FetchedMoviesList>() {
+            @Override
+            public void onResponse(final Call<FetchedMoviesList> call, final Response<FetchedMoviesList> response) {
+                try {
+                    fetchedMoviesList = response.body();
+                    moviesList = fetchedMoviesList.getResults();
+                    moviesGridAdapter.clear();
+                    moviesGridAdapter.addAll(moviesList);
+                } catch (NullPointerException e){
+                    Toast toast = null;
+                    if (response.code() == 401){
+                        toast = Toast.makeText(getActivity(), "Unauthenticated", Toast.LENGTH_SHORT);
+                    } else if (response.code() >= 400){
+                        toast = Toast.makeText(getActivity(), "Client Error " + response.code()
+                                + " " + response.message(), Toast.LENGTH_SHORT);
+                    }
+                    toast.show();
+                }
+            }
+
+            @Override
+            public void onFailure(final Call<FetchedMoviesList> call, final Throwable t) {
+                Log.e("getMovieList threw: ", t.getMessage());
+            }
+        });
     }
 
     @Override
