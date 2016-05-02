@@ -1,4 +1,4 @@
-package com.example.android.popularmovies;
+package com.example.android.popularmovies.model;
 
 import android.net.Uri;
 import android.os.Parcel;
@@ -51,9 +51,6 @@ public class Movie implements Parcelable {
         return title;
     }
 
-    public String getPoster_path() {
-        return poster_path;
-    }
 
     public String getOverview() {
         return overview;

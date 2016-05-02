@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.example.android.popularmovies.data.network.FetchedMoviesList;
 import com.example.android.popularmovies.data.network.ServiceProvider;
 import com.example.android.popularmovies.data.network.TheMovieDBService;
+import com.example.android.popularmovies.model.Movie;
 
 import java.util.ArrayList;
 import java.util.List;

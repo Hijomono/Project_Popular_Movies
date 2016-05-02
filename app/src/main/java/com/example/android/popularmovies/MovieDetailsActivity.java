@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
+import com.example.android.popularmovies.model.Movie;
+
 public class MovieDetailsActivity extends AppCompatActivity {
 
     private static final String MOVIE_EXTRA = "MovieDetailsActivity.MOVIE_EXTRA";
