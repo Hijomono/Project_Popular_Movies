@@ -1,6 +1,5 @@
 package com.example.android.popularmovies;
 
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -44,12 +43,11 @@ public class MovieDetailsFragment extends Fragment {
         unbinder = ButterKnife.bind(this, rootView);
         Movie movie = ((MovieDetailsActivity) getActivity()).getMovie();
         title.setText(movie.getTitle());
-        Uri url = Uri.parse(movie.getPosterUrl());
-        Picasso.with(getContext()).load(url).into(poster);
-        releaseDate.setText(movie.getReleaseDate());
-        String ratingOutOfTen = movie.getUserRating() + "/10";
+        Picasso.with(getContext()).load(movie.getPicassoUri()).into(poster);
+        releaseDate.setText(movie.getRelease_date());
+        String ratingOutOfTen = movie.getVote_average() + "/10";
         rating.setText(ratingOutOfTen);
-        overview.setText(movie.getPlotSynopsis());
+        overview.setText(movie.getOverview());
 
         return rootView;
     }

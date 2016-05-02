@@ -5,11 +5,6 @@
     <string name="title_activity_settings">Settings</string>
     <string name="title_activity_movie_details">Movie Details</string>
 
-    <!-- Strings used to create image URLs to be loaded with Picasso -->
-
-    <string name="base_picasso_url">http://image.tmdb.org/t/p/</string>
-    <string name="picasso_w185_size">w185</string>
-
     <!-- Strings related to Settings -->
 
     <string name="pref_sort_by_label">Sort by</string>
