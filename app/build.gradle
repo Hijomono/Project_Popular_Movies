@@ -7,7 +7,8 @@ Map<String, String> versions = [
         picasso         : '2.5.2',
         stetho          : '1.3.1',
         junit           : '4.12',
-        retrofit        : '2.0.2'
+        retrofit        : '2.0.2',
+        ehlistview      : '1.0.0'
 ]
 
 android {
@@ -53,6 +54,7 @@ dependencies {
     compile "com.android.support:support-annotations:$versions.support"
     compile "com.squareup.retrofit2:retrofit:$versions.retrofit"
     compile "com.squareup.retrofit2:converter-gson:$versions.retrofit"
+    compile "com.github.paolorotolo:expandableheightlistview:$versions.ehlistview"
 
     apt "com.jakewharton:butterknife-compiler:$versions.butterknife"
 }
