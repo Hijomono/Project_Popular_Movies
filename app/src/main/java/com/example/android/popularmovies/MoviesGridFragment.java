@@ -37,6 +37,9 @@ public class MoviesGridFragment extends Fragment {
     public MoviesGridFragment() {
     }
 
+    /**
+     * Calls for movies and populates the GridView with them.
+     */
     private void updateMovies() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         String moviesSortBy = prefs.getString(getString(R.string.pref_sort_by_key),
