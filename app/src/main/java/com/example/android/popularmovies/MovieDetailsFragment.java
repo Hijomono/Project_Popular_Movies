@@ -1,11 +1,13 @@
 package com.example.android.popularmovies;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -33,6 +35,8 @@ import retrofit2.Response;
  * A placeholder fragment containing a simple view.
  */
 public class MovieDetailsFragment extends Fragment {
+
+    public static final String LOG_TAG = MovieDetailsFragment.class.getSimpleName();
 
     @BindView(R.id.detail_scrollview)
     ScrollView scrollView;
@@ -96,6 +100,18 @@ public class MovieDetailsFragment extends Fragment {
         rating.setText(ratingOutOfTen);
         overview.setText(movie.getOverview());
         trailerListView.setAdapter(trailersAdapter);
+        trailerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                final Trailer trailerClicked = trailersAdapter.getItem(position);
+                Intent intent = new Intent(Intent.ACTION_VIEW, trailerClicked.getYoutubeUri());
+                if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
+                    startActivity(intent);
+                } else {
+                    Log.d(LOG_TAG, "Couldn't call " + trailerClicked.getYoutubeUri() + ", no receiving apps installed!");
+                }
+            }
+        });
         reviewListView.setAdapter(reviewsAdapter);
 
         return rootView;
