@@ -7,7 +7,7 @@ import android.net.Uri;
  */
 public class Trailer {
 
-    private static final String BASE_YOUTUBE_URL = "https://m.youtube.com/watch?v";
+    private static final String BASE_YOUTUBE_URL = "https://m.youtube.com/watch?v=";
 
     private final String name;
     private final String key;
