@@ -18,12 +18,12 @@ public class TheMovieDBService {
 
         @GET("/3/movie/{movieId}/videos")
         Call<FetchedTrailersList> getTrailerList(
-                @Path("movieId") String movieId,
+                @Path("movieId") int movieId,
                 @Query("api_key") String apiKey);
 
         @GET("/3/movie/{movieId}/reviews")
         Call<FetchedReviewsList> getReviewList(
-                @Path("movieId") String movieId,
+                @Path("movieId") int movieId,
                 @Query("api_key") String apiKey);
     }
 }
