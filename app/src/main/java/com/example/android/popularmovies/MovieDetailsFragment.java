@@ -3,8 +3,13 @@ package com.example.android.popularmovies;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.ShareActionProvider;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -61,11 +66,9 @@ public class MovieDetailsFragment extends Fragment {
     private Unbinder unbinder;
 
     private TrailersAdapter trailersAdapter;
-    private Call<FetchedTrailersList> trailerscall;
     private FetchedTrailersList fetchedTrailersList;
     private List<Trailer> trailerList;
     private ReviewsAdapter reviewsAdapter;
-    private Call<FetchedReviewsList> reviewscall;
     private FetchedReviewsList fetchedReviewsList;
     private List<Review> reviewList;
 
@@ -73,11 +76,12 @@ public class MovieDetailsFragment extends Fragment {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onCreate(final Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         fetchMovieTrailers();
         fetchMovieReviews();
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -118,6 +122,29 @@ public class MovieDetailsFragment extends Fragment {
     }
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_movie_details_fragment, menu);
+        MenuItem shareItem = menu.findItem(R.id.menu_item_share);
+        ShareActionProvider detailShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(shareItem);
+
+        // Attach an intent to this ShareActionProvider.  You can update this at any time,
+        // like when the user selects a new piece of data they might like to share.
+        if (trailersAdapter.getCount() != 0) {
+            detailShareActionProvider.setShareIntent(createShareFirstTrailerIntent());
+        } else {
+            Toast.makeText(getActivity(), R.string.pref_share_no_trailer_available, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private Intent createShareFirstTrailerIntent() {
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+        shareIntent.setType("text/plain");
+        shareIntent.putExtra(Intent.EXTRA_TEXT, trailersAdapter.getItem(0).getYoutubeUri().toString());
+        return shareIntent;
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
@@ -127,10 +154,11 @@ public class MovieDetailsFragment extends Fragment {
      * Calls for trailers for the selected movie and populates trailerListView with them.
      */
     private void fetchMovieTrailers() {
-        trailerscall = ServiceProvider.fetchMoviesService().getTrailerList(
+        Call<FetchedTrailersList> trailersCall;
+        trailersCall = ServiceProvider.fetchMoviesService().getTrailerList(
                 ((MovieDetailsActivity) getActivity()).getMovie().getId(),
                 BuildConfig.THE_MOVIE_DB_API_KEY);
-        trailerscall.enqueue(new Callback<FetchedTrailersList>() {
+        trailersCall.enqueue(new Callback<FetchedTrailersList>() {
             @Override
             public void onResponse(final Call<FetchedTrailersList> call, final Response<FetchedTrailersList> response) {
                 try {
@@ -155,6 +183,7 @@ public class MovieDetailsFragment extends Fragment {
                     }
                     toast.show();
                 }
+                setHasOptionsMenu(true);
             }
 
             @Override
@@ -168,10 +197,11 @@ public class MovieDetailsFragment extends Fragment {
      * Calls for reviews for the selected movie and populates reviewListView with them.
      */
     private void fetchMovieReviews() {
-        reviewscall = ServiceProvider.fetchMoviesService().getReviewList(
+        Call<FetchedReviewsList> reviewsCall;
+        reviewsCall = ServiceProvider.fetchMoviesService().getReviewList(
                 ((MovieDetailsActivity) getActivity()).getMovie().getId(),
                 BuildConfig.THE_MOVIE_DB_API_KEY);
-        reviewscall.enqueue(new Callback<FetchedReviewsList>() {
+        reviewsCall.enqueue(new Callback<FetchedReviewsList>() {
             @Override
             public void onResponse(final Call<FetchedReviewsList> call, final Response<FetchedReviewsList> response) {
                 try {
