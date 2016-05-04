@@ -14,4 +14,11 @@
     <string name="pref_popularity_label">Popularity</string>
     <string name="pref_rating_label">User rating</string>
 
+    <!-- Headers for the trailer and review lists in movie details -->
+
+    <string name="trailers_header">Trailers:</string>
+    <string name="trailers_header_empty">There are no trailers available for this movie yet.</string>
+    <string name="reviews_header">Reviews:</string>
+    <string name="reviews_header_empty">There are no reviews available for this movie yet.</string>
+
 </resources>
