@@ -11,14 +11,20 @@ public class Trailer {
 
     private final String name;
     private final String key;
+    private final String type;
 
     public String getName() {
         return name;
     }
 
+    public String getType() {
+        return type;
+    }
+
     private Trailer(final Builder builder) {
         key = builder.key;
         name = builder.name;
+        type = builder.type;
     }
 
     public static Builder newBuilder() {
@@ -29,6 +35,7 @@ public class Trailer {
         Builder builder = new Builder();
         builder.key = copy.key;
         builder.name = copy.name;
+        builder.type = copy.type;
         return builder;
     }
 
@@ -39,6 +46,7 @@ public class Trailer {
     public static final class Builder {
         private String key;
         private String name;
+        private String type;
 
         private Builder() {
         }
@@ -62,6 +70,17 @@ public class Trailer {
          */
         public Builder name(final String val) {
             name = val;
+            return this;
+        }
+
+        /**
+         * Sets the {@code type} and returns a reference to this Builder so that the methods can be chained together.
+         *
+         * @param val the {@code type} to set
+         * @return a reference to this Builder
+         */
+        public Builder type(final String val) {
+            type = val;
             return this;
         }
 
