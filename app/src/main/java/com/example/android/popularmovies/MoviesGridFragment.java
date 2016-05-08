@@ -79,7 +79,7 @@ public class MoviesGridFragment extends Fragment {
      * and populates the adapter with moviesList.
      */
     private void fetchMoviesFromFavorites() {
-        moviesList.clear();
+        moviesList = new ArrayList<Movie>();
         Cursor favMoviesCursor = getActivity().getContentResolver().query(
                 FavoriteMoviesProvider.FavoriteMovies.CONTENT_URI,
                 null,
