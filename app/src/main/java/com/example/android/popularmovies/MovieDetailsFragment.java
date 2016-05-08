@@ -1,5 +1,6 @@
 package com.example.android.popularmovies;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -18,9 +19,11 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.android.popularmovies.data.database.FavoriteMoviesColumns;
 import com.example.android.popularmovies.data.network.FetchedReviewsList;
 import com.example.android.popularmovies.data.network.FetchedTrailersList;
 import com.example.android.popularmovies.data.network.ServiceProvider;
+import com.example.android.popularmovies.data.database.FavoriteMoviesProvider;
 import com.example.android.popularmovies.model.Movie;
 import com.example.android.popularmovies.model.Review;
 import com.example.android.popularmovies.model.Trailer;
@@ -31,6 +34,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -63,6 +67,8 @@ public class MovieDetailsFragment extends Fragment {
     TextView reviewsHeader;
     @BindView(R.id.detail_review_list)
     com.github.paolorotolo.expandableheightlistview.ExpandableHeightListView reviewListView;
+    @BindView(R.id.detail_fav_button)
+    ImageView favButton;
     private Unbinder unbinder;
 
     private TrailersAdapter trailersAdapter;
@@ -71,6 +77,7 @@ public class MovieDetailsFragment extends Fragment {
     private ReviewsAdapter reviewsAdapter;
     private FetchedReviewsList fetchedReviewsList;
     private List<Review> reviewList;
+    private Movie selectedMovie;
 
     public MovieDetailsFragment() {
     }
@@ -96,12 +103,15 @@ public class MovieDetailsFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_movie_details, container, false);
         unbinder = ButterKnife.bind(this, rootView);
-        Movie movie = ((MovieDetailsActivity) getActivity()).getMovie();
-        title.setText(movie.getTitle());
-        Picasso.with(getContext()).load(movie.getPicassoUri()).into(poster);
-        releaseDate.setText(movie.getRelease_date());
-        rating.setText(movie.getRatingOutOfTen());
-        overview.setText(movie.getOverview());
+        selectedMovie = ((MovieDetailsActivity) getActivity()).getMovie();
+        title.setText(selectedMovie.getTitle());
+        Picasso.with(getContext()).load(selectedMovie.getPicassoUri()).into(poster);
+        releaseDate.setText(selectedMovie.getRelease_date());
+        rating.setText(selectedMovie.getRatingOutOfTen());
+        overview.setText(selectedMovie.getOverview());
+        if (selectedMovie.isFavorite(getActivity())) {
+            favButton.setImageResource(R.drawable.fav_on_touch_selector);
+        }
         trailerListView.setAdapter(trailersAdapter);
         trailerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -235,5 +245,47 @@ public class MovieDetailsFragment extends Fragment {
                 Log.e("getReviewList threw: ", t.getMessage());
             }
         });
+    }
+
+    /**
+     * Calls favMovie or unfavMovie depending on the current movie being favorite or not
+     * and changes the drawable resource for favButton.
+     */
+    @OnClick(R.id.detail_fav_button)
+    public void onFavButtonClicked() {
+        if (selectedMovie.isFavorite(getActivity())) {
+            unfavMovie();
+            favButton.setImageResource(R.drawable.fav_off_touch_selector);
+        } else {
+            favMovie();
+            favButton.setImageResource(R.drawable.fav_on_touch_selector);
+        }
+    }
+
+    /**
+     * Adds the movie to the favorite movies database.
+     */
+    private void favMovie() {
+        ContentValues movieValues = new ContentValues();
+        movieValues.put(FavoriteMoviesColumns.MOVIE_ID, selectedMovie.getId());
+        movieValues.put(FavoriteMoviesColumns.TITLE, selectedMovie.getTitle());
+        movieValues.put(FavoriteMoviesColumns.POSTER_PATH, selectedMovie.getPoster_path());
+        movieValues.put(FavoriteMoviesColumns.OVERVIEW, selectedMovie.getOverview());
+        movieValues.put(FavoriteMoviesColumns.RATING, selectedMovie.getVote_average());
+        movieValues.put(FavoriteMoviesColumns.RELEASE_DATE, selectedMovie.getRelease_date());
+        getActivity().getContentResolver().insert(
+                FavoriteMoviesProvider.FavoriteMovies.CONTENT_URI,
+                movieValues);
+    }
+
+    /**
+     * Removes the movie from the favorite movies database.
+     */
+    private void unfavMovie() {
+        getActivity().getContentResolver().delete(
+                FavoriteMoviesProvider.FavoriteMovies.CONTENT_URI,
+                FavoriteMoviesColumns.MOVIE_ID + "=?",
+                new String[]{String.valueOf(selectedMovie.getId())}
+        );
     }
 }

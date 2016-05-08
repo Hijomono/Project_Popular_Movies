@@ -1,8 +1,14 @@
 package com.example.android.popularmovies.model;
 
+import android.content.Context;
+import android.database.DatabaseUtils;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import com.example.android.popularmovies.data.database.FavoriteMoviesColumns;
+import com.example.android.popularmovies.data.provider.FavoriteMoviesDatabase;
 
 /**
  * Created by debeyo on 03/03/2016.
@@ -214,5 +220,23 @@ public class Movie implements Parcelable {
      */
     public String getRatingOutOfTen() {
         return vote_average + "/10";
+    }
+
+    /**
+     * .
+     *
+     * @return the String to be shown on MovieDetailsFragment
+     */
+    public boolean isFavorite(Context context) {
+        final SQLiteDatabase db = FavoriteMoviesDatabase.getInstance(context).getReadableDatabase();
+        return DatabaseUtils.longForQuery(
+                db,
+                "select count(*) from "
+                        + com.example.android.popularmovies.data.database.FavoriteMoviesDatabase.FAVORITE_MOVIES
+                        + " where "
+                        + FavoriteMoviesColumns.MOVIE_ID
+                        + "=? limit 1",
+                new String[]{String.valueOf(id)}
+        ) > 0;
     }
 }

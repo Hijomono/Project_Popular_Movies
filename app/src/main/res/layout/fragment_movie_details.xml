@@ -55,6 +55,15 @@
                     android:layout_height="wrap_content"
                     android:textSize="16sp"
                     tools:text="Rating"/>
+
+                <ImageView
+                    android:id="@+id/detail_fav_button"
+                    android:src="@drawable/fav_off_touch_selector"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:scaleType="centerCrop"
+                    android:clickable="true"
+                    android:layout_margin="20dp"/>
             </LinearLayout>
 
         </LinearLayout>
