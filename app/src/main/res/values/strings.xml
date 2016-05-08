@@ -11,8 +11,11 @@
     <string name="pref_sort_by_key" translatable="false">sort_by</string>
     <string name="pref_sort_by_popularity" translatable="false">popular</string>
     <string name="pref_sort_by_rating" translatable="false">top_rated</string>
+    <string name="pref_sort_by_favorite" translatable="false">favorite</string>
     <string name="pref_popularity_label">Popularity</string>
     <string name="pref_rating_label">User rating</string>
+    <string name="pref_favorite_label">Favorites</string>
+    
     <string name="pref_share_title">Share</string>
     <string name="pref_share_no_trailer_available">There are no trailers to share for this movie.</string>
 
