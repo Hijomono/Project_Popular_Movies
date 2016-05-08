@@ -51,6 +51,9 @@ public class Movie implements Parcelable {
         return title;
     }
 
+    public String getPoster_path() {
+        return poster_path;
+    }
 
     public String getOverview() {
         return overview;
@@ -202,5 +205,14 @@ public class Movie implements Parcelable {
     public Uri getPicassoUri() {
         String posterUrl = BASE_PICASSO_URL + poster_path;
         return Uri.parse(posterUrl);
+    }
+
+    /**
+     * Adds "/10" to {@code vote_average}.
+     *
+     * @return the String to be shown on MovieDetailsFragment
+     */
+    public String getRatingOutOfTen() {
+        return vote_average + "/10";
     }
 }

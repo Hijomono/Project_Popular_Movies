@@ -100,8 +100,7 @@ public class MovieDetailsFragment extends Fragment {
         title.setText(movie.getTitle());
         Picasso.with(getContext()).load(movie.getPicassoUri()).into(poster);
         releaseDate.setText(movie.getRelease_date());
-        String ratingOutOfTen = movie.getVote_average() + "/10";
-        rating.setText(ratingOutOfTen);
+        rating.setText(movie.getRatingOutOfTen());
         overview.setText(movie.getOverview());
         trailerListView.setAdapter(trailersAdapter);
         trailerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -183,6 +182,8 @@ public class MovieDetailsFragment extends Fragment {
                     }
                     toast.show();
                 }
+                // This is called here so trailersAdapter.getItem(0)
+                // returns the trailer needed in createFirstTrailerIntent.
                 setHasOptionsMenu(true);
             }
 
