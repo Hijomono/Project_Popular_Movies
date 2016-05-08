@@ -87,7 +87,6 @@ public class MoviesGridFragment extends Fragment {
                 null,
                 null);
         if (favMoviesCursor != null) {
-            favMoviesCursor.moveToFirst();
             try {
                 while (favMoviesCursor.moveToNext()) {
                     Movie movie = Movie.newBuilder()
