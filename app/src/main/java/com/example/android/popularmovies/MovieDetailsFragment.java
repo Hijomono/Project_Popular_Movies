@@ -23,7 +23,7 @@ import com.example.android.popularmovies.data.database.FavoriteMoviesColumns;
 import com.example.android.popularmovies.data.network.FetchedReviewsList;
 import com.example.android.popularmovies.data.network.FetchedTrailersList;
 import com.example.android.popularmovies.data.network.ServiceProvider;
-import com.example.android.popularmovies.data.database.FavoriteMoviesProvider;
+import com.example.android.popularmovies.data.database.MoviesProvider;
 import com.example.android.popularmovies.model.Movie;
 import com.example.android.popularmovies.model.Review;
 import com.example.android.popularmovies.model.Trailer;
@@ -274,7 +274,7 @@ public class MovieDetailsFragment extends Fragment {
         movieValues.put(FavoriteMoviesColumns.RATING, selectedMovie.getVote_average());
         movieValues.put(FavoriteMoviesColumns.RELEASE_DATE, selectedMovie.getRelease_date());
         getActivity().getContentResolver().insert(
-                FavoriteMoviesProvider.FavoriteMovies.CONTENT_URI,
+                MoviesProvider.FavoriteMovies.CONTENT_URI,
                 movieValues);
     }
 
@@ -283,7 +283,7 @@ public class MovieDetailsFragment extends Fragment {
      */
     private void unfavMovie() {
         getActivity().getContentResolver().delete(
-                FavoriteMoviesProvider.FavoriteMovies.CONTENT_URI,
+                MoviesProvider.FavoriteMovies.CONTENT_URI,
                 FavoriteMoviesColumns.MOVIE_ID + "=?",
                 new String[]{String.valueOf(selectedMovie.getId())}
         );

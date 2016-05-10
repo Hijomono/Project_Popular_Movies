@@ -8,7 +8,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.example.android.popularmovies.data.database.FavoriteMoviesColumns;
-import com.example.android.popularmovies.data.provider.FavoriteMoviesDatabase;
+import com.example.android.popularmovies.data.database.MoviesDatabase;
 
 /**
  * Created by debeyo on 03/03/2016.
@@ -228,11 +228,11 @@ public class Movie implements Parcelable {
      * @return the String to be shown on MovieDetailsFragment
      */
     public boolean isFavorite(Context context) {
-        final SQLiteDatabase db = FavoriteMoviesDatabase.getInstance(context).getReadableDatabase();
+        final SQLiteDatabase db = com.example.android.popularmovies.data.provider.MoviesDatabase.getInstance(context).getReadableDatabase();
         return DatabaseUtils.longForQuery(
                 db,
                 "select count(*) from "
-                        + com.example.android.popularmovies.data.database.FavoriteMoviesDatabase.FAVORITE_MOVIES
+                        + MoviesDatabase.FAVORITE_MOVIES
                         + " where "
                         + FavoriteMoviesColumns.MOVIE_ID
                         + "=? limit 1",

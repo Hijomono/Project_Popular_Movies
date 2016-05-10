@@ -14,7 +14,7 @@ import android.widget.GridView;
 import android.widget.Toast;
 
 import com.example.android.popularmovies.data.database.FavoriteMoviesColumns;
-import com.example.android.popularmovies.data.database.FavoriteMoviesProvider;
+import com.example.android.popularmovies.data.database.MoviesProvider;
 import com.example.android.popularmovies.data.network.FetchedMoviesList;
 import com.example.android.popularmovies.data.network.ServiceProvider;
 import com.example.android.popularmovies.data.network.TheMovieDBService;
@@ -81,7 +81,7 @@ public class MoviesGridFragment extends Fragment {
     private void fetchMoviesFromFavorites() {
         moviesList = new ArrayList<Movie>();
         Cursor favMoviesCursor = getActivity().getContentResolver().query(
-                FavoriteMoviesProvider.FavoriteMovies.CONTENT_URI,
+                MoviesProvider.FavoriteMovies.CONTENT_URI,
                 null,
                 null,
                 null,

@@ -7,15 +7,21 @@ import net.simonvt.schematic.annotation.Table;
  * Created by debeyo on 08/05/2016.
  */
 @Database(
-        version = FavoriteMoviesDatabase.VERSION,
+        version = MoviesDatabase.VERSION,
         packageName = "com.example.android.popularmovies.data.provider"
 )
-public class FavoriteMoviesDatabase {
-    private FavoriteMoviesDatabase() {
+public class MoviesDatabase {
+    private MoviesDatabase() {
     }
 
     public static final int VERSION = 1;
 
     @Table(FavoriteMoviesColumns.class)
     public static final String FAVORITE_MOVIES = "favorite_movies";
+
+    @Table(PopularMoviesColumns.class)
+    public static final String POPULAR_MOVIES = "popular_movies";
+
+    @Table(TopRatedMoviesColumns.class)
+    public static final String TOP_RATED_MOVIES = "top_rated_movies";
 }
