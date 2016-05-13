@@ -7,7 +7,7 @@ import net.simonvt.schematic.annotation.PrimaryKey;
 /**
  * Created by debeyo on 08/05/2016.
  */
-public class FavoriteMoviesColumns {
+public class MoviesColumns {
     @DataType(DataType.Type.INTEGER) @PrimaryKey
     public static final String MOVIE_ID = "movie_id";
     @DataType(DataType.Type.TEXT) @NotNull
