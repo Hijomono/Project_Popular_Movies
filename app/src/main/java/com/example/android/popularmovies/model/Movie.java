@@ -3,7 +3,6 @@ package com.example.android.popularmovies.model;
 import android.content.Context;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
-import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -208,9 +207,8 @@ public class Movie implements Parcelable {
      *
      * @return a Uri built with the {@code poster_path} of this {@code Movie}
      */
-    public Uri getPicassoUri() {
-        String posterUrl = BASE_PICASSO_URL + poster_path;
-        return Uri.parse(posterUrl);
+    public String getPicassoUri() {
+        return BASE_PICASSO_URL + poster_path;
     }
 
     /**
