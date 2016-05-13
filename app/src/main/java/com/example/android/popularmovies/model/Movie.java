@@ -7,7 +7,7 @@ import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.example.android.popularmovies.data.database.FavoriteMoviesColumns;
+import com.example.android.popularmovies.data.database.MoviesColumns;
 import com.example.android.popularmovies.data.database.MoviesDatabase;
 
 /**
@@ -234,7 +234,7 @@ public class Movie implements Parcelable {
                 "select count(*) from "
                         + MoviesDatabase.FAVORITE_MOVIES
                         + " where "
-                        + FavoriteMoviesColumns.MOVIE_ID
+                        + MoviesColumns.MOVIE_ID
                         + "=? limit 1",
                 new String[]{String.valueOf(id)}
         ) > 0;

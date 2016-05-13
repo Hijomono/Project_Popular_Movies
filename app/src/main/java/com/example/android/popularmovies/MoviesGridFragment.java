@@ -13,7 +13,7 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
 
-import com.example.android.popularmovies.data.database.FavoriteMoviesColumns;
+import com.example.android.popularmovies.data.database.MoviesColumns;
 import com.example.android.popularmovies.data.database.MoviesProvider;
 import com.example.android.popularmovies.data.network.FetchedMoviesList;
 import com.example.android.popularmovies.data.network.ServiceProvider;
@@ -90,12 +90,12 @@ public class MoviesGridFragment extends Fragment {
             try {
                 while (favMoviesCursor.moveToNext()) {
                     Movie movie = Movie.newBuilder()
-                            .id(favMoviesCursor.getInt(favMoviesCursor.getColumnIndex(FavoriteMoviesColumns.MOVIE_ID)))
-                            .title(favMoviesCursor.getString(favMoviesCursor.getColumnIndex(FavoriteMoviesColumns.TITLE)))
-                            .poster_path(favMoviesCursor.getString(favMoviesCursor.getColumnIndex(FavoriteMoviesColumns.POSTER_PATH)))
-                            .overview(favMoviesCursor.getString(favMoviesCursor.getColumnIndex(FavoriteMoviesColumns.OVERVIEW)))
-                            .vote_average(favMoviesCursor.getString(favMoviesCursor.getColumnIndex(FavoriteMoviesColumns.RATING)))
-                            .release_date(favMoviesCursor.getString(favMoviesCursor.getColumnIndex(FavoriteMoviesColumns.RELEASE_DATE)))
+                            .id(favMoviesCursor.getInt(favMoviesCursor.getColumnIndex(MoviesColumns.MOVIE_ID)))
+                            .title(favMoviesCursor.getString(favMoviesCursor.getColumnIndex(MoviesColumns.TITLE)))
+                            .poster_path(favMoviesCursor.getString(favMoviesCursor.getColumnIndex(MoviesColumns.POSTER_PATH)))
+                            .overview(favMoviesCursor.getString(favMoviesCursor.getColumnIndex(MoviesColumns.OVERVIEW)))
+                            .vote_average(favMoviesCursor.getString(favMoviesCursor.getColumnIndex(MoviesColumns.RATING)))
+                            .release_date(favMoviesCursor.getString(favMoviesCursor.getColumnIndex(MoviesColumns.RELEASE_DATE)))
                             .build();
                     moviesList.add(movie);
                 }

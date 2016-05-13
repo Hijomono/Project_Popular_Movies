@@ -16,12 +16,12 @@ public class MoviesDatabase {
 
     public static final int VERSION = 1;
 
-    @Table(FavoriteMoviesColumns.class)
+    @Table(MoviesColumns.class)
     public static final String FAVORITE_MOVIES = "favorite_movies";
 
-    @Table(PopularMoviesColumns.class)
+    @Table(MoviesColumns.class)
     public static final String POPULAR_MOVIES = "popular_movies";
 
-    @Table(TopRatedMoviesColumns.class)
+    @Table(MoviesColumns.class)
     public static final String TOP_RATED_MOVIES = "top_rated_movies";
 }

@@ -19,7 +19,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.android.popularmovies.data.database.FavoriteMoviesColumns;
+import com.example.android.popularmovies.data.database.MoviesColumns;
 import com.example.android.popularmovies.data.network.FetchedReviewsList;
 import com.example.android.popularmovies.data.network.FetchedTrailersList;
 import com.example.android.popularmovies.data.network.ServiceProvider;
@@ -267,12 +267,12 @@ public class MovieDetailsFragment extends Fragment {
      */
     private void favMovie() {
         ContentValues movieValues = new ContentValues();
-        movieValues.put(FavoriteMoviesColumns.MOVIE_ID, selectedMovie.getId());
-        movieValues.put(FavoriteMoviesColumns.TITLE, selectedMovie.getTitle());
-        movieValues.put(FavoriteMoviesColumns.POSTER_PATH, selectedMovie.getPoster_path());
-        movieValues.put(FavoriteMoviesColumns.OVERVIEW, selectedMovie.getOverview());
-        movieValues.put(FavoriteMoviesColumns.RATING, selectedMovie.getVote_average());
-        movieValues.put(FavoriteMoviesColumns.RELEASE_DATE, selectedMovie.getRelease_date());
+        movieValues.put(MoviesColumns.MOVIE_ID, selectedMovie.getId());
+        movieValues.put(MoviesColumns.TITLE, selectedMovie.getTitle());
+        movieValues.put(MoviesColumns.POSTER_PATH, selectedMovie.getPoster_path());
+        movieValues.put(MoviesColumns.OVERVIEW, selectedMovie.getOverview());
+        movieValues.put(MoviesColumns.RATING, selectedMovie.getVote_average());
+        movieValues.put(MoviesColumns.RELEASE_DATE, selectedMovie.getRelease_date());
         getActivity().getContentResolver().insert(
                 MoviesProvider.FavoriteMovies.CONTENT_URI,
                 movieValues);
@@ -284,7 +284,7 @@ public class MovieDetailsFragment extends Fragment {
     private void unfavMovie() {
         getActivity().getContentResolver().delete(
                 MoviesProvider.FavoriteMovies.CONTENT_URI,
-                FavoriteMoviesColumns.MOVIE_ID + "=?",
+                MoviesColumns.MOVIE_ID + "=?",
                 new String[]{String.valueOf(selectedMovie.getId())}
         );
     }

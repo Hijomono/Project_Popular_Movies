@@ -37,14 +37,14 @@ public class MoviesProvider {
         @ContentUri(
                 path = Path.FAVORITE_MOVIES,
                 type = "vnd.android.cursor.dir/favorite_movie",
-                defaultSort = FavoriteMoviesColumns.TITLE + " DESC")
+                defaultSort = MoviesColumns.TITLE + " DESC")
         public static final Uri CONTENT_URI = buildUri(Path.FAVORITE_MOVIES);
 
         @InexactContentUri(
                 name = "MOVIE_ID",
                 path = Path.FAVORITE_MOVIES + "/#",
                 type = "vnd.android.cursor.item/favorite_movie",
-                whereColumn = FavoriteMoviesColumns.MOVIE_ID,
+                whereColumn = MoviesColumns.MOVIE_ID,
                 pathSegment = 1)
         public static Uri withId(int id){
             return buildUri(Path.FAVORITE_MOVIES, String.valueOf(id));
@@ -55,14 +55,14 @@ public class MoviesProvider {
         @ContentUri(
                 path = Path.POPULAR_MOVIES,
                 type = "vnd.android.cursor.dir/popular_movie",
-                defaultSort = PopularMoviesColumns.TITLE + " DESC")
+                defaultSort = MoviesColumns.TITLE + " DESC")
         public static final Uri CONTENT_URI = buildUri(Path.POPULAR_MOVIES);
 
         @InexactContentUri(
                 name = "MOVIE_ID",
                 path = Path.POPULAR_MOVIES + "/#",
                 type = "vnd.android.cursor.item/popular_movie",
-                whereColumn = PopularMoviesColumns.MOVIE_ID,
+                whereColumn = MoviesColumns.MOVIE_ID,
                 pathSegment = 1)
         public static Uri withId(int id){
             return buildUri(Path.POPULAR_MOVIES, String.valueOf(id));
@@ -73,14 +73,14 @@ public class MoviesProvider {
         @ContentUri(
                 path = Path.TOP_RATED_MOVIES,
                 type = "vnd.android.cursor.dir/top_rated_movie",
-                defaultSort = TopRatedMoviesColumns.TITLE + " DESC")
+                defaultSort = MoviesColumns.TITLE + " DESC")
         public static final Uri CONTENT_URI = buildUri(Path.TOP_RATED_MOVIES);
 
         @InexactContentUri(
                 name = "MOVIE_ID",
                 path = Path.TOP_RATED_MOVIES + "/#",
                 type = "vnd.android.cursor.item/top_rated_movie",
-                whereColumn = TopRatedMoviesColumns.MOVIE_ID,
+                whereColumn = MoviesColumns.MOVIE_ID,
                 pathSegment = 1)
         public static Uri withId(int id){
             return buildUri(Path.TOP_RATED_MOVIES, String.valueOf(id));
