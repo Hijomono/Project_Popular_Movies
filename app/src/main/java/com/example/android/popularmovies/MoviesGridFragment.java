@@ -1,152 +1,117 @@
 package com.example.android.popularmovies;
 
-import android.content.SharedPreferences;
+import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
-import android.util.Log;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.Toast;
+import android.widget.ListView;
 
 import com.example.android.popularmovies.data.database.MoviesColumns;
-import com.example.android.popularmovies.data.database.MoviesProvider;
-import com.example.android.popularmovies.data.network.FetchedMoviesList;
-import com.example.android.popularmovies.data.network.ServiceProvider;
-import com.example.android.popularmovies.data.network.TheMovieDBService;
-import com.example.android.popularmovies.model.Movie;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * A placeholder fragment containing the grid view where the movie posters will be displayed.
  */
-public class MoviesGridFragment extends Fragment {
+public abstract class MoviesGridFragment extends Fragment implements android.support.v4.app.LoaderManager.LoaderCallbacks<Cursor> {
 
-    private MoviesAdapter moviesGridAdapter;
-    private Call<FetchedMoviesList> call;
-    private FetchedMoviesList fetchedMoviesList;
-    private List<Movie> moviesList;
+    private static final int MOVIES_LOADER = 0;
+    private static final String[] MOVIES_COLUMNS = {
+            MoviesColumns._ID,
+            MoviesColumns.MOVIE_ID,
+            MoviesColumns.TITLE,
+            MoviesColumns.POSTER_PATH,
+            MoviesColumns.OVERVIEW,
+            MoviesColumns.RATING,
+            MoviesColumns.RELEASE_DATE
+    };
+
+    private static final String POSITION_KEY = "selected_position";
+
+    private MoviesCursorAdapter moviesGridAdapter;
+    private GridView gridView;
+    private int listPosition = GridView.INVALID_POSITION;
 
     public MoviesGridFragment() {
-    }
-
-    /**
-     * Calls themoviedb.org for movies, fills moviesList with them
-     * and populates the adapter with moviesList.
-     */
-    private void fetchMoviesFromTheMovieDb(String moviesSortBy) {
-        TheMovieDBService.TheMovieDBAPI service = ServiceProvider.fetchMoviesService();
-        call = service.getMovieList(moviesSortBy, BuildConfig.THE_MOVIE_DB_API_KEY);
-        call.enqueue(new Callback<FetchedMoviesList>() {
-            @Override
-            public void onResponse(final Call<FetchedMoviesList> call, final Response<FetchedMoviesList> response) {
-                try {
-                    fetchedMoviesList = response.body();
-                    moviesList = fetchedMoviesList.getResults();
-                    moviesGridAdapter.clear();
-                    moviesGridAdapter.addAll(moviesList);
-                } catch (NullPointerException e) {
-                    Toast toast = null;
-                    if (response.code() == 401) {
-                        toast = Toast.makeText(getActivity(), "Unauthenticated", Toast.LENGTH_SHORT);
-                    } else if (response.code() >= 400) {
-                        toast = Toast.makeText(getActivity(), "Client Error " + response.code()
-                                + " " + response.message(), Toast.LENGTH_SHORT);
-                    }
-                    toast.show();
-                }
-            }
-
-            @Override
-            public void onFailure(final Call<FetchedMoviesList> call, final Throwable t) {
-                Log.e("getMovieList threw: ", t.getMessage());
-            }
-        });
-    }
-
-    /**
-     * Generates Movies from the database, fills moviesList with them
-     * and populates the adapter with moviesList.
-     */
-    private void fetchMoviesFromFavorites() {
-        moviesList = new ArrayList<Movie>();
-        Cursor favMoviesCursor = getActivity().getContentResolver().query(
-                MoviesProvider.FavoriteMovies.CONTENT_URI,
-                null,
-                null,
-                null,
-                null);
-        if (favMoviesCursor != null) {
-            try {
-                while (favMoviesCursor.moveToNext()) {
-                    Movie movie = Movie.newBuilder()
-                            .id(favMoviesCursor.getInt(favMoviesCursor.getColumnIndex(MoviesColumns.MOVIE_ID)))
-                            .title(favMoviesCursor.getString(favMoviesCursor.getColumnIndex(MoviesColumns.TITLE)))
-                            .poster_path(favMoviesCursor.getString(favMoviesCursor.getColumnIndex(MoviesColumns.POSTER_PATH)))
-                            .overview(favMoviesCursor.getString(favMoviesCursor.getColumnIndex(MoviesColumns.OVERVIEW)))
-                            .vote_average(favMoviesCursor.getString(favMoviesCursor.getColumnIndex(MoviesColumns.RATING)))
-                            .release_date(favMoviesCursor.getString(favMoviesCursor.getColumnIndex(MoviesColumns.RELEASE_DATE)))
-                            .build();
-                    moviesList.add(movie);
-                }
-            } finally {
-                favMoviesCursor.close();
-            }
-            moviesGridAdapter.clear();
-            moviesGridAdapter.addAll(moviesList);
-        }
-    }
-
-    /**
-     * Fills moviesList and the adapter depending on the sort criteria.
-     */
-    private void updateMovies() {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        String moviesSortBy = prefs.getString(
-                getString(R.string.pref_sort_by_key),
-                getString(R.string.pref_sort_by_popularity));
-            if (moviesSortBy.equals(getString(R.string.pref_sort_by_favorite))) {
-                fetchMoviesFromFavorites();
-            } else {
-                fetchMoviesFromTheMovieDb(moviesSortBy);
-            }
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        updateMovies();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        moviesGridAdapter = new MoviesAdapter(
-                getActivity(),
-                new ArrayList<Movie>());
+        moviesGridAdapter = new MoviesCursorAdapter(getActivity(), null, 0);
 
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-        GridView gridView = (GridView) rootView.findViewById(R.id.movies_grid);
+        gridView = (GridView) rootView.findViewById(R.id.movies_grid);
         gridView.setAdapter(moviesGridAdapter);
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                final Movie movieClicked = moviesGridAdapter.getItem(position);
-                startActivity(MovieDetailsActivity.launchDetailsIntent(movieClicked, getActivity()));
+                Cursor cursor = (Cursor) adapterView.getItemAtPosition(position);
+                if (cursor != null) {
+                    Intent intent = new Intent(getActivity(), MovieDetailsActivity.class).setData(getUriWithId(cursor));
+                    startActivity(intent);
+                }
+                listPosition = position;
             }
         });
-
+        if (savedInstanceState != null && savedInstanceState.containsKey(POSITION_KEY)) {
+            listPosition = savedInstanceState.getInt(POSITION_KEY);
+        }
         return rootView;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        getLoaderManager().initLoader(MOVIES_LOADER, null, this);
+        super.onActivityCreated(savedInstanceState);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        if (listPosition != GridView.INVALID_POSITION) {
+            outState.putInt(POSITION_KEY, listPosition);
+        }
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
+        return new CursorLoader(getActivity(),
+                getUri(),
+                MOVIES_COLUMNS,
+                null,
+                null,
+                getOrder());
+    }
+
+    protected abstract String getOrder();
+
+    protected abstract Uri getUri();
+
+    protected abstract Uri getUriWithId(Cursor cursor);
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        moviesGridAdapter.swapCursor(data);
+        if (listPosition != ListView.INVALID_POSITION) {
+            gridView.smoothScrollToPosition(listPosition);
+        }
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        moviesGridAdapter.swapCursor(null);
     }
 }
