@@ -26,11 +26,22 @@ public class MovieDetailsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        Bundle movieBundle = getIntent().getExtras();
-        chosenMovie = movieBundle.getParcelable(MOVIE_EXTRA);
-
         setContentView(R.layout.activity_movie_details);
+
+        if (savedInstanceState == null) {
+            // Create the detail fragment and add it to the activity
+            // using a fragment transaction.
+
+            Bundle arguments = new Bundle();
+            arguments.putParcelable(MovieDetailsFragment.DETAIL_URI, getIntent().getData());
+
+            MovieDetailsFragment fragment = new MovieDetailsFragment();
+            fragment.setArguments(arguments);
+
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.detail_container, fragment)
+                    .commit();
+        }
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
