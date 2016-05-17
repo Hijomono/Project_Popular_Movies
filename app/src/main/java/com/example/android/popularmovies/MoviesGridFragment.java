@@ -102,8 +102,11 @@ public abstract class MoviesGridFragment extends Fragment implements android.sup
 
     protected abstract Uri getUriWithId(Cursor cursor);
 
+    protected abstract void syncIfDataMissing(Cursor data);
+
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+       syncIfDataMissing(data);
         moviesGridAdapter.swapCursor(data);
         if (listPosition != ListView.INVALID_POSITION) {
             gridView.smoothScrollToPosition(listPosition);
