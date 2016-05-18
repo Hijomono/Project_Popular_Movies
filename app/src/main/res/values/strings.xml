@@ -24,6 +24,8 @@
     <string name="reviews_header">Reviews:</string>
     <string name="reviews_header_empty">There are no reviews available for this movie yet.</string>
 
+    <string name="empty_details_text">Select a movie</string>
+
     <!-- Strings related to SyncAdapter -->
     <string name="sync_account_type">popularmovies.example.com</string>
     <string name="content_authority">com.example.android.popularmovies</string>

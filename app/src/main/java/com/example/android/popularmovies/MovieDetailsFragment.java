@@ -113,12 +113,14 @@ public class MovieDetailsFragment extends Fragment implements android.support.v4
                              Bundle savedInstanceState) {
 
         Bundle arguments = getArguments();
+        View rootView;
         if (arguments != null) {
             selectedMovieUri = arguments.getParcelable(MovieDetailsFragment.DETAIL_URI);
+            rootView = inflater.inflate(R.layout.fragment_movie_details, container, false);
+            unbinder = ButterKnife.bind(this, rootView);
+        } else {
+            rootView = inflater.inflate(R.layout.fragment_movie_details_empty, container, false);
         }
-
-        View rootView = inflater.inflate(R.layout.fragment_movie_details, container, false);
-        unbinder = ButterKnife.bind(this, rootView);
 
         return rootView;
     }
@@ -150,7 +152,9 @@ public class MovieDetailsFragment extends Fragment implements android.support.v4
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        unbinder.unbind();
+        if (selectedMovieUri != null) {
+            unbinder.unbind();
+        }
     }
 
     /**
