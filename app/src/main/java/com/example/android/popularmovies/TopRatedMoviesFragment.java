@@ -33,4 +33,11 @@ public class TopRatedMoviesFragment extends MoviesGridFragment {
             MoviesSyncAdapter.syncImmediately(getActivity());
         }
     }
+
+    @Override
+    protected void makeCallback(Cursor cursor) {
+        ((Callback) getActivity())
+                .onItemSelected(MoviesProvider.TopRatedMovies.withId(cursor.getInt(cursor.getColumnIndex(MoviesColumns._ID)))
+                );
+    }
 }
