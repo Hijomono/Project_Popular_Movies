@@ -9,6 +9,7 @@
         android:id="@+id/movies_grid"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:numColumns="2"/>
+        android:numColumns="2"
+        android:background="@android:color/darker_gray"/>
 
 </FrameLayout>

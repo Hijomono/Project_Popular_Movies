@@ -8,5 +8,7 @@
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:text="@string/empty_details_text"
-    android:textSize="40sp"/>
+    android:textSize="40sp"
+    android:background="@android:color/darker_gray"
+    android:textColor="@android:color/black"/>
 </FrameLayout>

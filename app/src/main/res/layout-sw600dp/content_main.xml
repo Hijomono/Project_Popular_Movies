@@ -16,6 +16,11 @@
         android:layout_weight="1"
         tools:layout="@layout/fragment_main"/>
 
+    <View
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:background="@android:color/black"/>
+
     <FrameLayout
         android:id="@+id/detail_container"
         android:name="com.example.android.popularmovies.MovieDetailsFragment"
