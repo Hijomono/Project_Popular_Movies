@@ -33,4 +33,11 @@ public class PopularMoviesFragment extends MoviesGridFragment {
             MoviesSyncAdapter.syncImmediately(getActivity());
         }
     }
+
+    @Override
+    protected void makeCallback(Cursor cursor) {
+        ((Callback) getActivity())
+                .onItemSelected(MoviesProvider.PopularMovies.withId(cursor.getInt(cursor.getColumnIndex(MoviesColumns._ID)))
+                );
+    }
 }

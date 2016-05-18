@@ -1,6 +1,8 @@
 package com.example.android.popularmovies;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -14,7 +16,7 @@ import com.example.android.popularmovies.data.sync.MoviesSyncAdapter;
 
 import butterknife.BindView;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MoviesGridFragment.Callback {
 
     private static final String SORT_BY_FAVORITE = "favorite";
     private static final String SORT_BY_POPULARITY = "popular";
@@ -23,13 +25,29 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.container)
     protected FrameLayout container;
     private String mSortOrder;
-
+    private boolean useTabletLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mSortOrder = getSortOrder();
         setContentView(R.layout.activity_main);
+        if (findViewById(R.id.detail_container) != null) {
+            // The detail container view will be present only in the large-screen layouts
+            // (res/layout-sw600dp). If this view is present, then the activity should be
+            // in two-pane mode.
+            useTabletLayout = true;
+            // In two-pane mode, show the detail view in this activity by
+            // adding or replacing the detail fragment using a
+            // fragment transaction.
+            if (savedInstanceState == null) {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.detail_container, new MovieDetailsFragment(), null)
+                        .commit();
+            }
+        } else {
+            useTabletLayout = false;
+        }
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportFragmentManager().beginTransaction().replace(R.id.container, getFragment(mSortOrder), null).commit();
@@ -67,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
         if (!sortOrder.equals(mSortOrder)) {
             mSortOrder = sortOrder;
             getSupportFragmentManager().beginTransaction().replace(R.id.container, getFragment(sortOrder), null).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.detail_container, new MovieDetailsFragment(), null).commit();
         }
     }
 
@@ -87,6 +106,25 @@ public class MainActivity extends AppCompatActivity {
                 return new TopRatedMoviesFragment();
             default:
                 return null;
+        }
+    }
+
+    @Override
+    public void onItemSelected(Uri movieUri) {
+        if (useTabletLayout) {
+            Bundle args = new Bundle();
+            args.putParcelable(MovieDetailsFragment.DETAIL_URI, movieUri);
+
+            MovieDetailsFragment fragment = new MovieDetailsFragment();
+            fragment.setArguments(args);
+
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.detail_container, fragment, null)
+                    .commit();
+        } else {
+            Intent intent = new Intent(this, MovieDetailsActivity.class)
+                    .setData(movieUri);
+            startActivity(intent);
         }
     }
 }

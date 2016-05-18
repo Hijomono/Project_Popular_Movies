@@ -1,6 +1,5 @@
 package com.example.android.popularmovies;
 
-import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -60,8 +59,7 @@ public abstract class MoviesGridFragment extends Fragment implements android.sup
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 Cursor cursor = (Cursor) adapterView.getItemAtPosition(position);
                 if (cursor != null) {
-                    Intent intent = new Intent(getActivity(), MovieDetailsActivity.class).setData(getUriWithId(cursor));
-                    startActivity(intent);
+                    makeCallback(cursor);
                 }
                 listPosition = position;
             }
@@ -104,6 +102,8 @@ public abstract class MoviesGridFragment extends Fragment implements android.sup
 
     protected abstract void syncIfDataMissing(Cursor data);
 
+    protected abstract void makeCallback(Cursor cursor);
+
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
        syncIfDataMissing(data);
@@ -116,5 +116,17 @@ public abstract class MoviesGridFragment extends Fragment implements android.sup
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         moviesGridAdapter.swapCursor(null);
+    }
+
+    /**
+     * A callback interface that all activities containing this fragment must
+     * implement. This mechanism allows activities to be notified of item
+     * selections.
+     */
+    public interface Callback {
+        /**
+         * DetailFragmentCallback for when an item has been selected.
+         */
+        public void onItemSelected(Uri movieUri);
     }
 }
