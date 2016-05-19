@@ -93,7 +93,9 @@ public class MainActivity extends AppCompatActivity implements MoviesGridFragmen
         if (!sortOrder.equals(mSortOrder)) {
             mSortOrder = sortOrder;
             getSupportFragmentManager().beginTransaction().replace(R.id.container, getFragment(sortOrder), null).commit();
-            getSupportFragmentManager().beginTransaction().replace(R.id.detail_container, new MovieDetailsFragment(), null).commit();
+            if (useTabletLayout) {
+                getSupportFragmentManager().beginTransaction().replace(R.id.detail_container, new MovieDetailsFragment(), null).commit();
+            }
         }
     }
 
