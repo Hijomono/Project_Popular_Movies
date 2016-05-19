@@ -1,9 +1,10 @@
-package com.example.android.popularmovies;
+package com.example.android.popularmovies.ui.details;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
+import com.example.android.popularmovies.R;
 import com.example.android.popularmovies.model.Movie;
 
 public class MovieDetailsActivity extends AppCompatActivity {

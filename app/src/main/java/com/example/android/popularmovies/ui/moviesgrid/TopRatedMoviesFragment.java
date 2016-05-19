@@ -1,4 +1,4 @@
-package com.example.android.popularmovies;
+package com.example.android.popularmovies.ui.moviesgrid;
 
 import android.database.Cursor;
 import android.net.Uri;
@@ -6,25 +6,26 @@ import android.net.Uri;
 import com.example.android.popularmovies.data.database.MoviesColumns;
 import com.example.android.popularmovies.data.database.MoviesProvider;
 import com.example.android.popularmovies.data.sync.MoviesSyncAdapter;
+import com.example.android.popularmovies.ui.moviesgrid.MoviesGridFragment;
 
 /**
  * Created by debeyo on 14/05/2016.
  */
-public class PopularMoviesFragment extends MoviesGridFragment {
+public class TopRatedMoviesFragment extends MoviesGridFragment {
 
     @Override
     protected String getOrder() {
-        return MoviesColumns._ID + " ASC";
+        return MoviesColumns.RATING + " DESC";
     }
 
     @Override
     protected Uri getUri() {
-        return MoviesProvider.PopularMovies.CONTENT_URI;
+        return MoviesProvider.TopRatedMovies.CONTENT_URI;
     }
 
     @Override
     protected Uri getUriWithId(final Cursor cursor) {
-        return MoviesProvider.PopularMovies.withId(cursor.getInt(cursor.getColumnIndex(MoviesColumns._ID)));
+        return MoviesProvider.TopRatedMovies.withId(cursor.getInt(cursor.getColumnIndex(MoviesColumns._ID)));
     }
 
     @Override
@@ -37,7 +38,7 @@ public class PopularMoviesFragment extends MoviesGridFragment {
     @Override
     protected void makeCallback(Cursor cursor) {
         ((Callback) getActivity())
-                .onItemSelected(MoviesProvider.PopularMovies.withId(cursor.getInt(cursor.getColumnIndex(MoviesColumns._ID)))
+                .onItemSelected(MoviesProvider.TopRatedMovies.withId(cursor.getInt(cursor.getColumnIndex(MoviesColumns._ID)))
                 );
     }
 }

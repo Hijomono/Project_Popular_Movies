@@ -1,4 +1,4 @@
-package com.example.android.popularmovies;
+package com.example.android.popularmovies.ui.details;
 
 import android.content.ContentValues;
 import android.content.Intent;
@@ -25,6 +25,8 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.android.popularmovies.BuildConfig;
+import com.example.android.popularmovies.R;
 import com.example.android.popularmovies.data.database.MoviesColumns;
 import com.example.android.popularmovies.data.database.MoviesDatabase;
 import com.example.android.popularmovies.data.database.MoviesProvider;
@@ -53,7 +55,7 @@ import retrofit2.Response;
 public class MovieDetailsFragment extends Fragment implements android.support.v4.app.LoaderManager.LoaderCallbacks<Cursor> {
 
     public static final String LOG_TAG = MovieDetailsFragment.class.getSimpleName();
-    static final String DETAIL_URI = "URI";
+    public static final String DETAIL_URI = "URI";
 
     private static final int MOVIES_LOADER = 0;
     private static final String[] MOVIES_COLUMNS = {

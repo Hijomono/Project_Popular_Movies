@@ -1,4 +1,4 @@
-package com.example.android.popularmovies;
+package com.example.android.popularmovies.ui.moviesgrid;
 
 import android.database.Cursor;
 import android.net.Uri;

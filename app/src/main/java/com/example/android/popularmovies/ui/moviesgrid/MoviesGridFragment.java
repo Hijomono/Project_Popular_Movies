@@ -1,4 +1,4 @@
-package com.example.android.popularmovies;
+package com.example.android.popularmovies.ui.moviesgrid;
 
 import android.database.Cursor;
 import android.net.Uri;
@@ -13,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ListView;
 
+import com.example.android.popularmovies.R;
 import com.example.android.popularmovies.data.database.MoviesColumns;
 
 /**

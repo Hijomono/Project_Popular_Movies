@@ -1,4 +1,4 @@
-package com.example.android.popularmovies;
+package com.example.android.popularmovies.ui;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -12,6 +12,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
 
+import com.example.android.popularmovies.ui.moviesgrid.FavoriteMoviesFragment;
+import com.example.android.popularmovies.ui.details.MovieDetailsActivity;
+import com.example.android.popularmovies.ui.details.MovieDetailsFragment;
+import com.example.android.popularmovies.ui.moviesgrid.MoviesGridFragment;
+import com.example.android.popularmovies.ui.moviesgrid.PopularMoviesFragment;
+import com.example.android.popularmovies.R;
+import com.example.android.popularmovies.ui.settings.SettingsActivity;
+import com.example.android.popularmovies.ui.moviesgrid.TopRatedMoviesFragment;
 import com.example.android.popularmovies.data.sync.MoviesSyncAdapter;
 
 import butterknife.BindView;

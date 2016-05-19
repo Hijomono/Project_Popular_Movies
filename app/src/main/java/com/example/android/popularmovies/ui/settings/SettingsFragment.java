@@ -1,10 +1,12 @@
-package com.example.android.popularmovies;
+package com.example.android.popularmovies.ui.settings;
 
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
+
+import com.example.android.popularmovies.R;
 
 /**
  * Created by debeyo on 23/04/2016.
