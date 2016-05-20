@@ -5,26 +5,20 @@ import android.accounts.AccountManager;
 import android.content.AbstractThreadedSyncAdapter;
 import android.content.ContentProviderClient;
 import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.SyncRequest;
 import android.content.SyncResult;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 
 import com.example.android.popularmovies.BuildConfig;
 import com.example.android.popularmovies.R;
-import com.example.android.popularmovies.data.database.MoviesColumns;
-import com.example.android.popularmovies.data.database.MoviesProvider;
 import com.example.android.popularmovies.data.network.FetchedMoviesList;
 import com.example.android.popularmovies.data.network.ServiceProvider;
 import com.example.android.popularmovies.data.network.TheMovieDBService;
-import com.example.android.popularmovies.model.Movie;
-
-import java.util.List;
-import java.util.Vector;
+import com.example.android.popularmovies.data.repository.MoviesRepository;
+import com.example.android.popularmovies.data.repository.MoviesStorage;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -43,8 +37,11 @@ public class MoviesSyncAdapter extends AbstractThreadedSyncAdapter {
     private static final String SORT_BY_POPULAR_PATH = "popular";
     private static final String SORT_BY_TOP_RATED_PATH = "top_rated";
 
+    private final MoviesRepository moviesRepository;
+
     public MoviesSyncAdapter(Context context, boolean autoInitialize) {
         super(context, autoInitialize);
+        moviesRepository = new MoviesStorage(getContext());
     }
 
     @Override
@@ -73,7 +70,7 @@ public class MoviesSyncAdapter extends AbstractThreadedSyncAdapter {
             public void onResponse(final Call<FetchedMoviesList> call, final Response<FetchedMoviesList> response) {
                 try {
                     FetchedMoviesList fetchedMoviesList = response.body();
-                    addMovieListToDatabase(fetchedMoviesList.getResults(), MoviesProvider.PopularMovies.CONTENT_URI);
+                    moviesRepository.savePopularMovies(fetchedMoviesList.getResults());
                 } catch (NullPointerException e) {
                     if (response.code() == 401) {
                         processError("Unauthenticated");
@@ -99,7 +96,7 @@ public class MoviesSyncAdapter extends AbstractThreadedSyncAdapter {
             public void onResponse(final Call<FetchedMoviesList> call, final Response<FetchedMoviesList> response) {
                 try {
                     FetchedMoviesList fetchedMoviesList = response.body();
-                    addMovieListToDatabase(fetchedMoviesList.getResults(), MoviesProvider.TopRatedMovies.CONTENT_URI);
+                    moviesRepository.saveTopRatedMovies(fetchedMoviesList.getResults());
                 } catch (NullPointerException e) {
                     if (response.code() == 401) {
                         processError("Unauthenticated");
@@ -121,39 +118,6 @@ public class MoviesSyncAdapter extends AbstractThreadedSyncAdapter {
 
     private void processError(final String error) {
         Log.e(LOG_TAG, error);
-    }
-
-    /**
-     * Take a list of movies and inserts it into a table of the database
-     * after deleting its previous content.
-     *
-     * @param list The list to be stored as popular movies.
-     * @param tableUri The Uri where the data must be inserted.
-     */
-    private void addMovieListToDatabase(List<Movie> list, Uri tableUri) {
-        Vector<ContentValues> moviesVector = new Vector<>(list.size());
-        for (int i = 0; i < list.size(); i++) {
-            Movie selectedMovie = list.get(i);
-            ContentValues movieValues = new ContentValues();
-
-            movieValues.put(MoviesColumns.MOVIE_ID, selectedMovie.getId());
-            movieValues.put(MoviesColumns.TITLE, selectedMovie.getTitle());
-            movieValues.put(MoviesColumns.POSTER_PATH, selectedMovie.getPicassoUri());
-            movieValues.put(MoviesColumns.OVERVIEW, selectedMovie.getOverview());
-            movieValues.put(MoviesColumns.RATING, selectedMovie.getVote_average());
-            movieValues.put(MoviesColumns.RELEASE_DATE, selectedMovie.getRelease_date());
-
-            moviesVector.add(movieValues);
-        }
-        ContentValues[] cvArray = new ContentValues[moviesVector.size()];
-        moviesVector.toArray(cvArray);
-        getContext().getContentResolver().delete(
-                tableUri,
-                null,
-                null);
-        getContext().getContentResolver().bulkInsert(
-                tableUri,
-                cvArray);
     }
 
     /**
