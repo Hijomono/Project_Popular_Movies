@@ -100,6 +100,7 @@ public class MoviesStorage implements MoviesRepository {
                 ContextWrapper cw = new ContextWrapper(context);
                 File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
                 File file = new File(directory, movie.getId() + ".png");
+                if (!file.exists()) {
                     try {
                         FileOutputStream ostream = new FileOutputStream(file);
                         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, ostream);
@@ -109,6 +110,7 @@ public class MoviesStorage implements MoviesRepository {
                         moviePosterTargets.remove(this);
                     } catch (IOException e) {
                         e.printStackTrace();
+                    }
                 }
             }
 
