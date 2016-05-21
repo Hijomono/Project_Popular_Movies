@@ -8,7 +8,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.util.Log;
 
 import com.example.android.popularmovies.data.database.MoviesColumns;
 import com.example.android.popularmovies.data.database.MoviesDatabase;
@@ -100,17 +99,17 @@ public class MoviesStorage implements MoviesRepository {
                 ContextWrapper cw = new ContextWrapper(context);
                 File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
                 File file = new File(directory, movie.getId() + ".png");
-                if (!file.exists()) {
-                    try {
+                try {
+                    if (!file.exists()) {
                         FileOutputStream ostream = new FileOutputStream(file);
                         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, ostream);
                         ostream.close();
-                        Uri imageUri = Uri.fromFile(file);
-                        updateMoviePoster(tableUri, movie, imageUri);
-                        moviePosterTargets.remove(this);
-                    } catch (IOException e) {
-                        e.printStackTrace();
                     }
+                    Uri imageUri = Uri.fromFile(file);
+                    updateMoviePoster(tableUri, movie, imageUri);
+                    moviePosterTargets.remove(this);
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
 
