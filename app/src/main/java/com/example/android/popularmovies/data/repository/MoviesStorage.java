@@ -3,12 +3,15 @@ package com.example.android.popularmovies.data.repository;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.database.DatabaseUtils;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.util.Log;
 
 import com.example.android.popularmovies.data.database.MoviesColumns;
+import com.example.android.popularmovies.data.database.MoviesDatabase;
 import com.example.android.popularmovies.data.database.MoviesProvider;
 import com.example.android.popularmovies.model.Movie;
 import com.squareup.picasso.Picasso;
@@ -80,57 +83,46 @@ public class MoviesStorage implements MoviesRepository {
         context.getContentResolver().bulkInsert(
                 tableUri,
                 cvArray);
-        Log.e(LOG_TAG, "Movies added to " + tableUri);
         savePosters(tableUri, list);
-        Log.e(LOG_TAG, "Posters loaded for " + tableUri);
     }
 
     private void savePosters(final Uri tableUri, final List<Movie> movieList) {
         for (int i = 0; i < movieList.size(); i++) {
             Movie movie = movieList.get(i);
             savePoster(tableUri, movie);
-            Log.e(LOG_TAG, "2." + i);
         }
-        Log.e(LOG_TAG, "List posters saved");
     }
 
     private void savePoster(final Uri tableUri, final Movie movie) {
         final Target target = new Target() {
             @Override
             public void onBitmapLoaded(final Bitmap bitmap, Picasso.LoadedFrom from) {
-
-                Log.e(LOG_TAG, "Bitmap loaded for " + movie.getTitle());
                 ContextWrapper cw = new ContextWrapper(context);
                 File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
                 File file = new File(directory, movie.getId() + ".png");
-                try {
-                    FileOutputStream ostream = new FileOutputStream(file);
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, ostream);
-                    ostream.close();
-                    Uri imageUri = Uri.fromFile(file);
-                    updateMoviePoster(tableUri, movie, imageUri);
-                    moviePosterTargets.remove(this);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    Log.e(LOG_TAG, "IOException for " + movie.getTitle());
+                    try {
+                        FileOutputStream ostream = new FileOutputStream(file);
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, ostream);
+                        ostream.close();
+                        Uri imageUri = Uri.fromFile(file);
+                        updateMoviePoster(tableUri, movie, imageUri);
+                        moviePosterTargets.remove(this);
+                    } catch (IOException e) {
+                        e.printStackTrace();
                 }
-
             }
 
             @Override
             public void onBitmapFailed(Drawable errorDrawable) {
-                Log.e(LOG_TAG, "Bitmap failed for " + movie.getTitle());
             }
 
             @Override
             public void onPrepareLoad(Drawable placeHolderDrawable) {
-                Log.e(LOG_TAG, "Prepared for " + movie.getTitle());
             }
         };
 
         moviePosterTargets.add(target);
         Picasso.with(context).load(movie.getPicassoUri()).into(target);
-        Log.e(LOG_TAG, "1." + movie.getTitle());
     }
 
     private void updateMoviePoster(final Uri tableUri, final Movie movie, final Uri posterUri) {
@@ -143,6 +135,74 @@ public class MoviesStorage implements MoviesRepository {
                 moviePosterValue,
                 selection,
                 selectionArgs);
-        Log.e(LOG_TAG, movie.getTitle() + " Uri updated");
+    }
+
+    //Method to delete poster images from movies not present in any database
+    public void deleteUnusedPosters() {
+        final String dirPath = "file:///data/data/com.example.android.popularmovies/app_imageDir/";
+        ContextWrapper cw = new ContextWrapper(context);
+        File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
+        String[] posterNames = directory.list();
+        for (String posterName : posterNames) {
+            String fullPosterPath = dirPath + posterName;
+            deleteIfUnused(fullPosterPath);
+        }
+    }
+
+    //Method to delete a single poster image if its movie does not exist in the database
+    private void deleteIfUnused(final String posterPath) {
+        if (!posterExistsInDatabase(posterPath)) {
+            File file = new File(posterPath);
+            if (file.delete()) {
+                Log.e(LOG_TAG, "deleted file " + posterPath);
+            }
+        }
+    }
+
+    //Method to determine if a movie exists in any database
+    private boolean posterExistsInDatabase(final String posterPath) {
+        return movieIsPopular(posterPath) || movieIsTopRated(posterPath) || movieIsFavorite(posterPath);
+    }
+
+    //Method to determine if a movie exists in popular
+    private boolean movieIsPopular(final String posterPath) {
+        final SQLiteDatabase db = com.example.android.popularmovies.data.provider.MoviesDatabase.getInstance(context).getReadableDatabase();
+        return DatabaseUtils.longForQuery(
+                db,
+                "select count(*) from "
+                        + MoviesDatabase.POPULAR_MOVIES
+                        + " where "
+                        + MoviesColumns.POSTER_PATH
+                        + "=? limit 1",
+                new String[]{posterPath}
+        ) > 0;
+    }
+
+    //Method to determine if a movie exists in top rated
+    private boolean movieIsTopRated(final String posterPath) {
+        final SQLiteDatabase db = com.example.android.popularmovies.data.provider.MoviesDatabase.getInstance(context).getReadableDatabase();
+        return DatabaseUtils.longForQuery(
+                db,
+                "select count(*) from "
+                        + MoviesDatabase.TOP_RATED_MOVIES
+                        + " where "
+                        + MoviesColumns.POSTER_PATH
+                        + "=? limit 1",
+                new String[]{posterPath}
+        ) > 0;
+    }
+
+    //Method to determine if a movie exists in favorites
+    private boolean movieIsFavorite(final String posterPath) {
+        final SQLiteDatabase db = com.example.android.popularmovies.data.provider.MoviesDatabase.getInstance(context).getReadableDatabase();
+        return DatabaseUtils.longForQuery(
+                db,
+                "select count(*) from "
+                        + MoviesDatabase.FAVORITE_MOVIES
+                        + " where "
+                        + MoviesColumns.POSTER_PATH
+                        + "=? limit 1",
+                new String[]{posterPath}
+        ) > 0;
     }
 }
