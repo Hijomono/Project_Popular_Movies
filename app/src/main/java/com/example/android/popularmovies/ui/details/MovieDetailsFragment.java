@@ -57,7 +57,7 @@ public class MovieDetailsFragment extends Fragment implements android.support.v4
     public static final String LOG_TAG = MovieDetailsFragment.class.getSimpleName();
     public static final String DETAIL_URI = "URI";
 
-    private static final int MOVIES_LOADER = 0;
+    private static final int MOVIES_LOADER = 1;
     private static final String[] MOVIES_COLUMNS = {
             MoviesColumns._ID,
             MoviesColumns.MOVIE_ID,
