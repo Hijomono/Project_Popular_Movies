@@ -78,6 +78,12 @@ public abstract class MoviesGridFragment extends Fragment implements android.sup
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        getLoaderManager().restartLoader(MOVIES_LOADER, null, this);
+    }
+
+    @Override
     public void onSaveInstanceState(Bundle outState) {
         if (listPosition != GridView.INVALID_POSITION) {
             outState.putInt(POSITION_KEY, listPosition);
