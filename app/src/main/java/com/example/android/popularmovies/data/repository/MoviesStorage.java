@@ -141,23 +141,21 @@ public class MoviesStorage implements MoviesRepository {
 
     //Method to delete poster images from movies not present in any database
     public void deleteUnusedPosters() {
-        final String dirPath = "file:///data/data/com.example.android.popularmovies/app_imageDir/";
         ContextWrapper cw = new ContextWrapper(context);
         File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
         String[] posterNames = directory.list();
         for (String posterName : posterNames) {
-            String fullPosterPath = dirPath + posterName;
-            deleteIfUnused(fullPosterPath);
+            deleteIfUnused(directory, posterName);
         }
     }
 
     //Method to delete a single poster image if its movie does not exist in the database
-    private void deleteIfUnused(final String posterPath) {
-        if (!posterExistsInDatabase(posterPath)) {
-            File file = new File(posterPath);
-            if (file.delete()) {
-                Log.e(LOG_TAG, "deleted file " + posterPath);
-            }
+    private void deleteIfUnused(final File directory, final String posterName) {
+        final String dirPath = "file:///data/data/com.example.android.popularmovies/app_imageDir/";
+        String fullPosterPath = dirPath + posterName;
+        if (!posterExistsInDatabase(fullPosterPath)) {
+            File file = new File(directory, posterName);
+            file.delete();
         }
     }
 
