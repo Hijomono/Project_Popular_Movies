@@ -49,6 +49,7 @@ public class MoviesSyncAdapter extends AbstractThreadedSyncAdapter {
         Log.d(LOG_TAG, "Starting sync");
         fetchPopularMovies();
         fetchTopRatedMovies();
+        moviesRepository.deleteUnusedPosters();
     }
 
     /**
