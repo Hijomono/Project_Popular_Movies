@@ -34,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements MoviesGridFragmen
     protected FrameLayout container;
     private String mSortOrder;
     private boolean useTabletLayout;
+    private Fragment gridFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,9 +59,20 @@ public class MainActivity extends AppCompatActivity implements MoviesGridFragmen
         }
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportFragmentManager().beginTransaction().replace(R.id.container, getFragment(mSortOrder), null).commit();
+        if(savedInstanceState == null) {
+            gridFragment = getFragment(mSortOrder);
+        } else {
+            gridFragment = getSupportFragmentManager().getFragment(savedInstanceState, "gridFragment");
+        }
+        getSupportFragmentManager().beginTransaction().replace(R.id.container, gridFragment, null).commit();
 
         MoviesSyncAdapter.initializeSyncAdapter(this);
+    }
+
+    @Override
+    protected void onSaveInstanceState(final Bundle outState) {
+        super.onSaveInstanceState(outState);
+        getSupportFragmentManager().putFragment(outState, "gridFragment", gridFragment);
     }
 
     @Override

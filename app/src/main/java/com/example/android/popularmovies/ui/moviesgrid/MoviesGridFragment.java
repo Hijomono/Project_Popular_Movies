@@ -3,6 +3,7 @@ package com.example.android.popularmovies.ui.moviesgrid;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -11,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.ListView;
 
 import com.example.android.popularmovies.R;
 import com.example.android.popularmovies.data.database.MoviesColumns;
@@ -36,7 +36,7 @@ public abstract class MoviesGridFragment extends Fragment implements android.sup
 
     private MoviesCursorAdapter moviesGridAdapter;
     private GridView gridView;
-    private int listPosition = GridView.INVALID_POSITION;
+    private Parcelable state;
 
     public MoviesGridFragment() {
     }
@@ -62,12 +62,8 @@ public abstract class MoviesGridFragment extends Fragment implements android.sup
                 if (cursor != null) {
                     makeCallback(cursor);
                 }
-                listPosition = position;
             }
         });
-        if (savedInstanceState != null && savedInstanceState.containsKey(POSITION_KEY)) {
-            listPosition = savedInstanceState.getInt(POSITION_KEY);
-        }
         return rootView;
     }
 
@@ -84,10 +80,14 @@ public abstract class MoviesGridFragment extends Fragment implements android.sup
     }
 
     @Override
+    public void onPause() {
+        state = gridView.onSaveInstanceState();
+        super.onPause();
+    }
+
+    @Override
     public void onSaveInstanceState(Bundle outState) {
-        if (listPosition != GridView.INVALID_POSITION) {
-            outState.putInt(POSITION_KEY, listPosition);
-        }
+        outState.putInt(POSITION_KEY, gridView.getFirstVisiblePosition());
         super.onSaveInstanceState(outState);
     }
 
@@ -113,10 +113,10 @@ public abstract class MoviesGridFragment extends Fragment implements android.sup
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-       syncIfDataMissing(data);
+        syncIfDataMissing(data);
         moviesGridAdapter.swapCursor(data);
-        if (listPosition != ListView.INVALID_POSITION) {
-            gridView.smoothScrollToPosition(listPosition);
+        if (state != null) {
+            gridView.onRestoreInstanceState(state);
         }
     }
 
