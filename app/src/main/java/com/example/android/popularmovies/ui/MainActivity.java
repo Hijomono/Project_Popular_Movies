@@ -72,7 +72,9 @@ public class MainActivity extends AppCompatActivity implements MoviesGridFragmen
     @Override
     protected void onSaveInstanceState(final Bundle outState) {
         super.onSaveInstanceState(outState);
-        getSupportFragmentManager().putFragment(outState, "gridFragment", gridFragment);
+        if (getSupportFragmentManager() == gridFragment.getFragmentManager()) {
+            getSupportFragmentManager().putFragment(outState, "gridFragment", gridFragment);
+        }
     }
 
     @Override
