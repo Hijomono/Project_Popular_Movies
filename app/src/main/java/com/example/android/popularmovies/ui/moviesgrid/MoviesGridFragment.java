@@ -32,8 +32,6 @@ public abstract class MoviesGridFragment extends Fragment implements android.sup
             MoviesColumns.RELEASE_DATE
     };
 
-    private static final String POSITION_KEY = "selected_position";
-
     private MoviesCursorAdapter moviesGridAdapter;
     private GridView gridView;
     private Parcelable state;
@@ -83,12 +81,6 @@ public abstract class MoviesGridFragment extends Fragment implements android.sup
     public void onPause() {
         state = gridView.onSaveInstanceState();
         super.onPause();
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        outState.putInt(POSITION_KEY, gridView.getFirstVisiblePosition());
-        super.onSaveInstanceState(outState);
     }
 
     @Override
