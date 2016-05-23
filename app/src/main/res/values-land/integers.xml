@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="grid_columns">4</integer>
+    <integer name="grid_weight">1</integer>
+    <integer name="detail_weight">1</integer>
+</resources>

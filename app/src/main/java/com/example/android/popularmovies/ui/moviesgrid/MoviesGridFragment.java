@@ -69,7 +69,9 @@ public abstract class MoviesGridFragment extends Fragment implements android.sup
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
         gridView = (RecyclerView) rootView.findViewById(R.id.movies_grid);
-        gridView.setLayoutManager(new GridLayoutManager(gridView.getContext(), 2));
+        gridView.setLayoutManager(new GridLayoutManager(
+                gridView.getContext(),
+                getActivity().getResources().getInteger(R.integer.grid_columns)));
         gridView.setAdapter(moviesGridAdapter);
 
         return rootView;
