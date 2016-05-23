@@ -2,15 +2,13 @@ package com.example.android.popularmovies.ui.moviesgrid;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CursorAdapter;
 import android.widget.ImageView;
 
 import com.example.android.popularmovies.R;
-import com.example.android.popularmovies.data.database.MoviesColumns;
-import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -18,36 +16,34 @@ import butterknife.ButterKnife;
 /**
  * Created by debeyo on 13/05/2016.
  */
-public class MoviesCursorAdapter extends CursorAdapter {
+public class MoviesCursorAdapter extends CursorRecyclerViewAdapter<MoviesCursorAdapter.ViewHolder> {
 
-    static class ViewHolder {
+    private Context mContext;
+
+    static class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.list_item_poster)
         ImageView moviePosterView;
 
         public ViewHolder(View view) {
+            super(view);
             ButterKnife.bind(this, view);
         }
     }
 
-    public MoviesCursorAdapter(Context context, Cursor c, int flags) {
-        super(context, c, flags);
+    public MoviesCursorAdapter(Context context, Cursor c) {
+        super(context, c);
+        mContext = context;
     }
 
     @Override
-    public View newView(Context context, Cursor cursor, ViewGroup parent) {
-
-        View view = LayoutInflater.from(context).inflate(R.layout.list_item_movie, parent, false);
-        ViewHolder viewHolder = new ViewHolder(view);
-        view.setTag(viewHolder);
-        return view;
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View itemView = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.list_item_movie, parent, false);
+        ViewHolder vh = new ViewHolder(itemView);
+        return vh;
     }
 
     @Override
-    public void bindView(View view, Context context, Cursor cursor) {
-
-        ViewHolder viewHolder = (ViewHolder) view.getTag();
-        Picasso.with(context)
-                .load(cursor.getString(cursor.getColumnIndex(MoviesColumns.POSTER_PATH)))
-                .into(viewHolder.moviePosterView);
+    public void onBindViewHolder(ViewHolder viewHolder, Cursor cursor) {
     }
 }
