@@ -7,14 +7,15 @@ import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.GridView;
 
 import com.example.android.popularmovies.R;
 import com.example.android.popularmovies.data.database.MoviesColumns;
+import com.squareup.picasso.Picasso;
 
 /**
  * A placeholder fragment containing the grid view where the movie posters will be displayed.
@@ -33,7 +34,7 @@ public abstract class MoviesGridFragment extends Fragment implements android.sup
     };
 
     private MoviesCursorAdapter moviesGridAdapter;
-    private GridView gridView;
+    private RecyclerView gridView;
     private Parcelable state;
 
     public MoviesGridFragment() {
@@ -47,21 +48,30 @@ public abstract class MoviesGridFragment extends Fragment implements android.sup
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        moviesGridAdapter = new MoviesCursorAdapter(getActivity(), null, 0);
+        moviesGridAdapter = new MoviesCursorAdapter(getActivity(), null) {
+            @Override
+            public void onBindViewHolder(final ViewHolder viewHolder, final Cursor cursor) {
+                super.onBindViewHolder(viewHolder, cursor);
+                final MyListItem myListItem = MyListItem.fromCursor(cursor);
+                viewHolder.moviePosterView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(final View v) {
+                        makeCallback(myListItem.getMovieId());
+                    }
+                });
+                Picasso.with(getActivity())
+                        .load(myListItem.getPosterPath())
+                        .into(viewHolder.moviePosterView);
+
+            }
+        };
 
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-        gridView = (GridView) rootView.findViewById(R.id.movies_grid);
+        gridView = (RecyclerView) rootView.findViewById(R.id.movies_grid);
+        gridView.setLayoutManager(new GridLayoutManager(gridView.getContext(), 2));
         gridView.setAdapter(moviesGridAdapter);
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                Cursor cursor = (Cursor) adapterView.getItemAtPosition(position);
-                if (cursor != null) {
-                    makeCallback(cursor);
-                }
-            }
-        });
+
         return rootView;
     }
 
@@ -79,7 +89,7 @@ public abstract class MoviesGridFragment extends Fragment implements android.sup
 
     @Override
     public void onPause() {
-        state = gridView.onSaveInstanceState();
+        state = gridView.getLayoutManager().onSaveInstanceState();
         super.onPause();
     }
 
@@ -101,14 +111,14 @@ public abstract class MoviesGridFragment extends Fragment implements android.sup
 
     protected abstract void syncIfDataMissing(Cursor data);
 
-    protected abstract void makeCallback(Cursor cursor);
+    protected abstract void makeCallback(int movieCursorId);
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         syncIfDataMissing(data);
-        moviesGridAdapter.swapCursor(data);
+            moviesGridAdapter.swapCursor(data);
         if (state != null) {
-            gridView.onRestoreInstanceState(state);
+            gridView.getLayoutManager().onRestoreInstanceState(state);
         }
     }
 
