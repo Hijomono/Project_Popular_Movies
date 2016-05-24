@@ -200,6 +200,7 @@ public class MovieDetailsFragment extends Fragment implements android.support.v4
             @Override
             public void onFailure(final Call<FetchedTrailersList> call, final Throwable t) {
                 Log.e("getTrailerList threw: ", t.getMessage());
+                trailersHeader.setText(R.string.trailers_header_no_internet);
             }
         });
     }
@@ -242,6 +243,7 @@ public class MovieDetailsFragment extends Fragment implements android.support.v4
             @Override
             public void onFailure(final Call<FetchedReviewsList> call, final Throwable t) {
                 Log.e("getReviewList threw: ", t.getMessage());
+                reviewsHeader.setText(R.string.reviews_header_no_internet);
             }
         });
     }

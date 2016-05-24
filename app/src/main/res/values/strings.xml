@@ -21,8 +21,10 @@
     <!-- Headers for the trailer and review lists in movie details -->
     <string name="trailers_header">Trailers:</string>
     <string name="trailers_header_empty">There are no trailers available for this movie yet.</string>
+    <string name="trailers_header_no_internet">You need to be online to see movie trailers.</string>
     <string name="reviews_header">Reviews:</string>
     <string name="reviews_header_empty">There are no reviews available for this movie yet.</string>
+    <string name="reviews_header_no_internet">You need to be online to see movie reviews.</string>
 
     <string name="empty_details_text">Select a movie</string>
 
