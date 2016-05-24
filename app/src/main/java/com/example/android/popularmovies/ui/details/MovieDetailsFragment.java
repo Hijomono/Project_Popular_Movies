@@ -175,7 +175,7 @@ public class MovieDetailsFragment extends Fragment implements android.support.v4
             public void onResponse(final Call<FetchedTrailersList> call, final Response<FetchedTrailersList> response) {
                 try {
                     // This prevents the screen to scroll to this ListView when it is populated.
-                    trailerListView.setFocusable(false);
+
                     fetchedTrailersList = response.body();
                     trailerList = fetchedTrailersList.getOnlyTrailers();
                     trailersAdapter.clear();
@@ -183,7 +183,6 @@ public class MovieDetailsFragment extends Fragment implements android.support.v4
                         trailersHeader.setText(R.string.trailers_header_empty);
                     } else {
                         trailersAdapter.addAll(trailerList);
-                        trailerListView.setExpanded(true);
                     }
                 } catch (NullPointerException e) {
                     Toast toast = null;
@@ -220,8 +219,6 @@ public class MovieDetailsFragment extends Fragment implements android.support.v4
             @Override
             public void onResponse(final Call<FetchedReviewsList> call, final Response<FetchedReviewsList> response) {
                 try {
-                    // This prevents the screen to scroll to this ListView when it is populated.
-                    reviewListView.setFocusable(false);
                     fetchedReviewsList = response.body();
                     reviewList = fetchedReviewsList.getResults();
                     reviewsAdapter.clear();
@@ -229,7 +226,6 @@ public class MovieDetailsFragment extends Fragment implements android.support.v4
                         reviewsHeader.setText(R.string.reviews_header_empty);
                     } else {
                         reviewsAdapter.addAll(reviewList);
-                        reviewListView.setExpanded(true);
                     }
                 } catch (NullPointerException e) {
                     Toast toast = null;
@@ -292,47 +288,10 @@ public class MovieDetailsFragment extends Fragment implements android.support.v4
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         if (data != null && data.moveToFirst()) {
-            selectedMovie = Movie.newBuilder()
-                    .id(data.getInt(data.getColumnIndex(MoviesColumns.MOVIE_ID)))
-                    .title(data.getString(data.getColumnIndex(MoviesColumns.TITLE)))
-                    .poster_path(data.getString(data.getColumnIndex(MoviesColumns.POSTER_PATH)))
-                    .overview(data.getString(data.getColumnIndex(MoviesColumns.OVERVIEW)))
-                    .vote_average(data.getString(data.getColumnIndex(MoviesColumns.RATING)))
-                    .release_date(data.getString(data.getColumnIndex(MoviesColumns.RELEASE_DATE)))
-                    .build();
-
-            fetchMovieTrailers();
-            fetchMovieReviews();
-
-            trailersAdapter = new TrailersAdapter(
-                    getActivity(),
-                    new ArrayList<Trailer>());
-            reviewsAdapter = new ReviewsAdapter(
-                    getActivity(),
-                    new ArrayList<Review>());
-
-            title.setText(selectedMovie.getTitle());
-            Picasso.with(getContext()).load(selectedMovie.getPoster_path()).into(poster);
-            releaseDate.setText(selectedMovie.getRelease_date());
-            rating.setText(selectedMovie.getRatingOutOfTen());
-            overview.setText(selectedMovie.getOverview());
-            if (selectedMovie.isFavorite(getActivity())) {
-                favButton.setImageResource(R.drawable.fav_on_touch_selector);
-            }
-            trailerListView.setAdapter(trailersAdapter);
-            trailerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                    final Trailer trailerClicked = trailersAdapter.getItem(position);
-                    Intent intent = new Intent(Intent.ACTION_VIEW, trailerClicked.getYoutubeUri());
-                    if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
-                        startActivity(intent);
-                    } else {
-                        Log.d(LOG_TAG, "Couldn't call " + trailerClicked.getYoutubeUri() + ", no receiving apps installed!");
-                    }
-                }
-            });
-            reviewListView.setAdapter(reviewsAdapter);
+            selectedMovie = movieOutOfCursor(data);
+            displayMovieDetails();
+            fillTrailerList();
+            fillReviewList();
         }
     }
 
@@ -351,5 +310,57 @@ public class MovieDetailsFragment extends Fragment implements android.support.v4
                         + "=? limit 1",
                 new String[]{String.valueOf(movieId)}
         ) > 0;
+    private Movie movieOutOfCursor(Cursor movieCursor) {
+        return Movie.newBuilder()
+                .id(movieCursor.getInt(movieCursor.getColumnIndex(MoviesColumns.MOVIE_ID)))
+                .title(movieCursor.getString(movieCursor.getColumnIndex(MoviesColumns.TITLE)))
+                .poster_path(movieCursor.getString(movieCursor.getColumnIndex(MoviesColumns.POSTER_PATH)))
+                .overview(movieCursor.getString(movieCursor.getColumnIndex(MoviesColumns.OVERVIEW)))
+                .vote_average(movieCursor.getString(movieCursor.getColumnIndex(MoviesColumns.RATING)))
+                .release_date(movieCursor.getString(movieCursor.getColumnIndex(MoviesColumns.RELEASE_DATE)))
+                .build();
+    }
+
+    private void displayMovieDetails() {
+        title.setText(selectedMovie.getTitle());
+        Picasso.with(getContext()).load(selectedMovie.getPoster_path()).into(poster);
+        releaseDate.setText(selectedMovie.getRelease_date());
+        rating.setText(selectedMovie.getRatingOutOfTen());
+        overview.setText(selectedMovie.getOverview());
+        if (selectedMovie.isFavorite(getActivity())) {
+            favButton.setImageResource(R.drawable.fav_on_touch_selector);
+        }
+    }
+
+    private void fillTrailerList() {
+        fetchMovieTrailers();
+        trailersAdapter = new TrailersAdapter(
+                getActivity(),
+                new ArrayList<Trailer>());
+        trailerListView.setFocusable(false);
+        trailerListView.setExpanded(true);
+        trailerListView.setAdapter(trailersAdapter);
+        trailerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                final Trailer trailerClicked = trailersAdapter.getItem(position);
+                Intent intent = new Intent(Intent.ACTION_VIEW, trailerClicked.getYoutubeUri());
+                if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
+                    startActivity(intent);
+                } else {
+                    Log.d(LOG_TAG, "Couldn't call " + trailerClicked.getYoutubeUri() + ", no receiving apps installed!");
+                }
+            }
+        });
+    }
+
+    private void fillReviewList() {
+        fetchMovieReviews();
+        reviewsAdapter = new ReviewsAdapter(
+                getActivity(),
+                new ArrayList<Review>());
+        reviewListView.setFocusable(false);
+        reviewListView.setExpanded(true);
+        reviewListView.setAdapter(reviewsAdapter);
     }
 }
