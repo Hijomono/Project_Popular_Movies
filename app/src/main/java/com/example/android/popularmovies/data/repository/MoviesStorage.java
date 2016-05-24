@@ -47,8 +47,26 @@ public class MoviesStorage implements MoviesRepository {
     }
 
     @Override
-    public void saveFavoriteMovie(final Movie movie) {
+    public void addToFavorites(final Movie movie) {
+        ContentValues movieValues = new ContentValues();
+        movieValues.put(MoviesColumns.MOVIE_ID, movie.getId());
+        movieValues.put(MoviesColumns.TITLE, movie.getTitle());
+        movieValues.put(MoviesColumns.POSTER_PATH, movie.getPoster_path());
+        movieValues.put(MoviesColumns.OVERVIEW, movie.getOverview());
+        movieValues.put(MoviesColumns.RATING, movie.getVote_average());
+        movieValues.put(MoviesColumns.RELEASE_DATE, movie.getRelease_date());
+        context.getContentResolver().insert(
+                MoviesProvider.FavoriteMovies.CONTENT_URI,
+                movieValues);
+    }
 
+    @Override
+    public void removeFromFavorites(final Movie movie) {
+        context.getContentResolver().delete(
+                MoviesProvider.FavoriteMovies.CONTENT_URI,
+                MoviesColumns.MOVIE_ID + "=?",
+                new String[]{String.valueOf(movie.getId())}
+        );
     }
 
     /**

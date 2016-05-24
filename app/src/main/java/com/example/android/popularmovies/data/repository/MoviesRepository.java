@@ -11,6 +11,7 @@ public interface MoviesRepository {
 
     void savePopularMovies(List<Movie> moviesList);
     void saveTopRatedMovies(List<Movie> moviesList);
-    void saveFavoriteMovie(Movie movie);
+    void addToFavorites(Movie movie);
+    void removeFromFavorites(Movie movie);
     void deleteUnusedPosters();
 }

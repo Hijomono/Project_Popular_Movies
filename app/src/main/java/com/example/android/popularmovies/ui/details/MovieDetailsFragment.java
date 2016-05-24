@@ -1,6 +1,5 @@
 package com.example.android.popularmovies.ui.details;
 
-import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
@@ -29,10 +28,11 @@ import com.example.android.popularmovies.BuildConfig;
 import com.example.android.popularmovies.R;
 import com.example.android.popularmovies.data.database.MoviesColumns;
 import com.example.android.popularmovies.data.database.MoviesDatabase;
-import com.example.android.popularmovies.data.database.MoviesProvider;
 import com.example.android.popularmovies.data.network.FetchedReviewsList;
 import com.example.android.popularmovies.data.network.FetchedTrailersList;
 import com.example.android.popularmovies.data.network.ServiceProvider;
+import com.example.android.popularmovies.data.repository.MoviesRepository;
+import com.example.android.popularmovies.data.repository.MoviesStorage;
 import com.example.android.popularmovies.model.Movie;
 import com.example.android.popularmovies.model.Review;
 import com.example.android.popularmovies.model.Trailer;
@@ -100,6 +100,7 @@ public class MovieDetailsFragment extends Fragment implements android.support.v4
     private List<Review> reviewList;
     private Movie selectedMovie;
     private Uri selectedMovieUri;
+    private MoviesRepository moviesRepository;
 
     public MovieDetailsFragment() {
     }
@@ -107,6 +108,8 @@ public class MovieDetailsFragment extends Fragment implements android.support.v4
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        moviesRepository = new MoviesStorage(getActivity());
+
     }
 
 
@@ -255,39 +258,12 @@ public class MovieDetailsFragment extends Fragment implements android.support.v4
     @OnClick(R.id.detail_fav_button)
     public void onFavButtonClicked() {
         if (selectedMovie.isFavorite(getActivity())) {
-            unfavMovie();
+            moviesRepository.removeFromFavorites(selectedMovie);
             favButton.setImageResource(R.drawable.fav_off_touch_selector);
         } else {
-            favMovie();
+            moviesRepository.addToFavorites(selectedMovie);
             favButton.setImageResource(R.drawable.fav_on_touch_selector);
         }
-    }
-
-    /**
-     * Adds the movie to the favorite movies database.
-     */
-    private void favMovie() {
-        ContentValues movieValues = new ContentValues();
-        movieValues.put(MoviesColumns.MOVIE_ID, selectedMovie.getId());
-        movieValues.put(MoviesColumns.TITLE, selectedMovie.getTitle());
-        movieValues.put(MoviesColumns.POSTER_PATH, selectedMovie.getPoster_path());
-        movieValues.put(MoviesColumns.OVERVIEW, selectedMovie.getOverview());
-        movieValues.put(MoviesColumns.RATING, selectedMovie.getVote_average());
-        movieValues.put(MoviesColumns.RELEASE_DATE, selectedMovie.getRelease_date());
-        getActivity().getContentResolver().insert(
-                MoviesProvider.FavoriteMovies.CONTENT_URI,
-                movieValues);
-    }
-
-    /**
-     * Removes the movie from the favorite movies database.
-     */
-    private void unfavMovie() {
-        getActivity().getContentResolver().delete(
-                MoviesProvider.FavoriteMovies.CONTENT_URI,
-                MoviesColumns.MOVIE_ID + "=?",
-                new String[]{String.valueOf(selectedMovie.getId())}
-        );
     }
 
     @Override
