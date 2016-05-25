@@ -27,7 +27,6 @@ import java.util.Vector;
  * Created by debeyo on 19/05/2016.
  */
 public class MoviesStorage implements MoviesRepository {
-    public static final String LOG_TAG = MoviesStorage.class.getSimpleName();
 
     private final Context context;
     private final List<Target> moviePosterTargets = new ArrayList<>();

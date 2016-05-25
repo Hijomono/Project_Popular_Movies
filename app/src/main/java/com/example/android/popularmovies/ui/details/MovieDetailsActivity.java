@@ -5,16 +5,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import com.example.android.popularmovies.R;
-import com.example.android.popularmovies.model.Movie;
 
 public class MovieDetailsActivity extends AppCompatActivity {
-
-    private static final String MOVIE_EXTRA = "MovieDetailsActivity.MOVIE_EXTRA";
-    private Movie chosenMovie;
-
-    public Movie getMovie() {
-        return chosenMovie;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -23,11 +23,6 @@ public class PopularMoviesFragment extends MoviesGridFragment {
     }
 
     @Override
-    protected Uri getUriWithId(final Cursor cursor) {
-        return MoviesProvider.PopularMovies.withId(cursor.getInt(cursor.getColumnIndex(MoviesColumns._ID)));
-    }
-
-    @Override
     protected void syncIfDataMissing(final Cursor data) {
         if (!data.moveToFirst()) {
             MoviesSyncAdapter.syncImmediately(getActivity());

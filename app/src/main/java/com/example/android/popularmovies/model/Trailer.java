@@ -27,19 +27,6 @@ public class Trailer {
         type = builder.type;
     }
 
-    public static Builder newBuilder() {
-        return new Builder();
-    }
-
-    public static Builder newBuilder(final Trailer copy) {
-        Builder builder = new Builder();
-        builder.key = copy.key;
-        builder.name = copy.name;
-        builder.type = copy.type;
-        return builder;
-    }
-
-
     /**
      * {@code Trailer} builder static inner class.
      */
@@ -49,39 +36,6 @@ public class Trailer {
         private String type;
 
         private Builder() {
-        }
-
-        /**
-         * Sets the {@code key} and returns a reference to this Builder so that the methods can be chained together.
-         *
-         * @param val the {@code key} to set
-         * @return a reference to this Builder
-         */
-        public Builder key(final String val) {
-            key = val;
-            return this;
-        }
-
-        /**
-         * Sets the {@code name} and returns a reference to this Builder so that the methods can be chained together.
-         *
-         * @param val the {@code name} to set
-         * @return a reference to this Builder
-         */
-        public Builder name(final String val) {
-            name = val;
-            return this;
-        }
-
-        /**
-         * Sets the {@code type} and returns a reference to this Builder so that the methods can be chained together.
-         *
-         * @param val the {@code type} to set
-         * @return a reference to this Builder
-         */
-        public Builder type(final String val) {
-            type = val;
-            return this;
         }
 
         /**

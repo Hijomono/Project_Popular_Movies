@@ -23,11 +23,6 @@ public class TopRatedMoviesFragment extends MoviesGridFragment {
     }
 
     @Override
-    protected Uri getUriWithId(final Cursor cursor) {
-        return MoviesProvider.TopRatedMovies.withId(cursor.getInt(cursor.getColumnIndex(MoviesColumns._ID)));
-    }
-
-    @Override
     protected void syncIfDataMissing(final Cursor data) {
         if (!data.moveToFirst()) {
             MoviesSyncAdapter.syncImmediately(getActivity());

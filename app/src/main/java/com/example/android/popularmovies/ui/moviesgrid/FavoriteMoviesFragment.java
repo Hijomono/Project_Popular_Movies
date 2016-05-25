@@ -22,11 +22,6 @@ public class FavoriteMoviesFragment extends MoviesGridFragment {
     }
 
     @Override
-    protected Uri getUriWithId(final Cursor cursor) {
-        return MoviesProvider.FavoriteMovies.withId(cursor.getInt(cursor.getColumnIndex(MoviesColumns._ID)));
-    }
-
-    @Override
     protected void syncIfDataMissing(final Cursor data) {}
 
     @Override

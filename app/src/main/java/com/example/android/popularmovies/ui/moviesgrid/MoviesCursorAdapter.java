@@ -18,8 +18,6 @@ import butterknife.ButterKnife;
  */
 public class MoviesCursorAdapter extends CursorRecyclerViewAdapter<MoviesCursorAdapter.ViewHolder> {
 
-    private Context mContext;
-
     static class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.list_item_poster)
         ImageView moviePosterView;
@@ -32,7 +30,6 @@ public class MoviesCursorAdapter extends CursorRecyclerViewAdapter<MoviesCursorA
 
     public MoviesCursorAdapter(Context context, Cursor c) {
         super(context, c);
-        mContext = context;
     }
 
     @Override

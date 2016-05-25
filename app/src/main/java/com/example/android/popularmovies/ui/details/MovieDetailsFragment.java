@@ -2,8 +2,6 @@ package com.example.android.popularmovies.ui.details;
 
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.DatabaseUtils;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -27,7 +25,6 @@ import android.widget.Toast;
 import com.example.android.popularmovies.BuildConfig;
 import com.example.android.popularmovies.R;
 import com.example.android.popularmovies.data.database.MoviesColumns;
-import com.example.android.popularmovies.data.database.MoviesDatabase;
 import com.example.android.popularmovies.data.network.FetchedReviewsList;
 import com.example.android.popularmovies.data.network.FetchedTrailersList;
 import com.example.android.popularmovies.data.network.ServiceProvider;
@@ -101,9 +98,6 @@ public class MovieDetailsFragment extends Fragment implements android.support.v4
     private Movie selectedMovie;
     private Uri selectedMovieUri;
     private MoviesRepository moviesRepository;
-
-    public MovieDetailsFragment() {
-    }
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
@@ -299,17 +293,6 @@ public class MovieDetailsFragment extends Fragment implements android.support.v4
     public void onLoaderReset(Loader<Cursor> cursorLoader) {
     }
 
-    private boolean checkFavorite(int movieId) {
-        final SQLiteDatabase db = com.example.android.popularmovies.data.provider.MoviesDatabase.getInstance(getActivity()).getReadableDatabase();
-        return DatabaseUtils.longForQuery(
-                db,
-                "select count(*) from "
-                        + MoviesDatabase.FAVORITE_MOVIES
-                        + " where "
-                        + MoviesColumns.MOVIE_ID
-                        + "=? limit 1",
-                new String[]{String.valueOf(movieId)}
-        ) > 0;
     private Movie movieOutOfCursor(Cursor movieCursor) {
         return Movie.newBuilder()
                 .id(movieCursor.getInt(movieCursor.getColumnIndex(MoviesColumns.MOVIE_ID)))

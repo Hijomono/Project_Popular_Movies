@@ -37,14 +37,6 @@ public abstract class MoviesGridFragment extends Fragment implements android.sup
     private RecyclerView gridView;
     private Parcelable state;
 
-    public MoviesGridFragment() {
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -108,8 +100,6 @@ public abstract class MoviesGridFragment extends Fragment implements android.sup
     protected abstract String getOrder();
 
     protected abstract Uri getUri();
-
-    protected abstract Uri getUriWithId(Cursor cursor);
 
     protected abstract void syncIfDataMissing(Cursor data);
 

@@ -21,17 +21,6 @@ public class Review {
         return content;
     }
 
-    public static Builder newBuilder() {
-        return new Builder();
-    }
-
-    public static Builder newBuilder(final Review copy) {
-        Builder builder = new Builder();
-        builder.author = copy.author;
-        builder.content = copy.content;
-        return builder;
-    }
-
     /**
      * {@code Review} builder static inner class.
      */
