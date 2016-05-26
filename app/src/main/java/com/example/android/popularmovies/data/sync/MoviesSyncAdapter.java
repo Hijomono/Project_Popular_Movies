@@ -30,7 +30,7 @@ import retrofit2.Response;
 public class MoviesSyncAdapter extends AbstractThreadedSyncAdapter {
 
     public static final int SYNC_INTERVAL = 60 * 60 * 24;
-    public static final int SYNC_FLEXTIME = SYNC_INTERVAL / 3;
+    public static final int SYNC_FLEXTIME = SYNC_INTERVAL / 6;
 
     public static final String LOG_TAG = MoviesSyncAdapter.class.getSimpleName();
 
