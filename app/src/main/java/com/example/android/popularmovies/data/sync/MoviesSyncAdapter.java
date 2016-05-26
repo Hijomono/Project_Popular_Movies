@@ -58,6 +58,8 @@ public class MoviesSyncAdapter extends AbstractThreadedSyncAdapter {
      *
      * @param moviesSortBy The path used to access themoviedb.org,
      *                     it can be either popular or top_rated.
+     * @param callback The callback created in fetchPopularMovies or
+     *                 fetchTopRatedMovies before calling this method.
      */
     private void fetchMoviesFromTheMovieDb(final String moviesSortBy, final Callback<FetchedMoviesList> callback) {
         TheMovieDBService.TheMovieDBAPI service = ServiceProvider.fetchMoviesService();
@@ -65,6 +67,9 @@ public class MoviesSyncAdapter extends AbstractThreadedSyncAdapter {
         call.enqueue(callback);
     }
 
+    /**
+     * Creates a callback to load popular movies from themoviedb.org and store them in the database.
+     */
     private void fetchPopularMovies() {
         final Callback<FetchedMoviesList> callback = new Callback<FetchedMoviesList>() {
             @Override
@@ -91,6 +96,9 @@ public class MoviesSyncAdapter extends AbstractThreadedSyncAdapter {
         fetchMoviesFromTheMovieDb(SORT_BY_POPULAR_PATH, callback);
     }
 
+    /**
+     * Creates a callback to load top rated movies from themoviedb.org and store them in the database.
+     */
     private void fetchTopRatedMovies() {
         final Callback<FetchedMoviesList> callback = new Callback<FetchedMoviesList>() {
             @Override

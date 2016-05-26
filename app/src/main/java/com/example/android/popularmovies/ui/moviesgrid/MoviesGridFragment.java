@@ -57,15 +57,12 @@ public abstract class MoviesGridFragment extends Fragment implements android.sup
 
             }
         };
-
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-
         gridView = (RecyclerView) rootView.findViewById(R.id.movies_grid);
         gridView.setLayoutManager(new GridLayoutManager(
                 gridView.getContext(),
                 getActivity().getResources().getInteger(R.integer.grid_columns)));
         gridView.setAdapter(moviesGridAdapter);
-
         return rootView;
     }
 
@@ -87,6 +84,35 @@ public abstract class MoviesGridFragment extends Fragment implements android.sup
         super.onPause();
     }
 
+    /**
+     * Gives the order to query movies with the loader.
+     *
+     * @return the order in which the movies have to fill the grid.
+     */
+    protected abstract String getOrder();
+
+    /**
+     * Gives the URI of the database table to query movies with the loader.
+     *
+     * @return the URI of the table that matches the fragment class.
+     */
+    protected abstract Uri getUri();
+
+    /**
+     * Activates the SyncAdapter if the cursor from the database is empty,
+     * except for favorite movies, that may be empty.
+     *
+     * @param data the cursor retrieved by the loader.
+     */
+    protected abstract void syncIfDataMissing(Cursor data);
+
+    /**
+     * Calls onItemClicked with an inexact URI that matches the fragment class.
+     *
+     * @param movieId the id of the movie clicked.
+     */
+    protected abstract void makeCallback(int movieId);
+
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
         return new CursorLoader(getActivity(),
@@ -97,13 +123,6 @@ public abstract class MoviesGridFragment extends Fragment implements android.sup
                 getOrder());
     }
 
-    protected abstract String getOrder();
-
-    protected abstract Uri getUri();
-
-    protected abstract void syncIfDataMissing(Cursor data);
-
-    protected abstract void makeCallback(int movieCursorId);
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
@@ -120,14 +139,15 @@ public abstract class MoviesGridFragment extends Fragment implements android.sup
     }
 
     /**
-     * A callback interface that all activities containing this fragment must
-     * implement. This mechanism allows activities to be notified of item
-     * selections.
+     * A callback interface that allows activities to be notified of item selections.
      */
     public interface Callback {
         /**
-         * DetailFragmentCallback for when an item has been selected.
+         * Launches the detail fragment, in a new activity or the same, to show a movie's details
+         * when it is clicked.
+         *
+         * @param movieUri the URI of the clicked movie.
          */
-        public void onItemSelected(Uri movieUri);
+        void onItemSelected(Uri movieUri);
     }
 }

@@ -30,7 +30,7 @@ public class PopularMoviesFragment extends MoviesGridFragment {
     }
 
     @Override
-    protected void makeCallback(int movieCursorId) {
-        ((Callback) getActivity()).onItemSelected(MoviesProvider.PopularMovies.withId(movieCursorId));
+    protected void makeCallback(int movieId) {
+        ((Callback) getActivity()).onItemSelected(MoviesProvider.PopularMovies.withId(movieId));
     }
 }

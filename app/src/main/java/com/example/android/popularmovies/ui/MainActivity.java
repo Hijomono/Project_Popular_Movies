@@ -42,13 +42,7 @@ public class MainActivity extends AppCompatActivity implements MoviesGridFragmen
         mSortOrder = getSortOrder();
         setContentView(R.layout.activity_main);
         if (findViewById(R.id.detail_container) != null) {
-            // The detail container view will be present only in the large-screen layouts
-            // (res/layout-sw600dp). If this view is present, then the activity should be
-            // in two-pane mode.
             useTabletLayout = true;
-            // In two-pane mode, show the detail view in this activity by
-            // adding or replacing the detail fragment using a
-            // fragment transaction.
             if (savedInstanceState == null) {
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.detail_container, new MovieDetailsFragment(), null)
@@ -70,6 +64,19 @@ public class MainActivity extends AppCompatActivity implements MoviesGridFragmen
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        final String sortOrder = getSortOrder();
+        if (!sortOrder.equals(mSortOrder)) {
+            mSortOrder = sortOrder;
+            getSupportFragmentManager().beginTransaction().replace(R.id.container, getFragment(sortOrder), null).commit();
+            if (useTabletLayout) {
+                getSupportFragmentManager().beginTransaction().replace(R.id.detail_container, new MovieDetailsFragment(), null).commit();
+            }
+        }
+    }
+
+    @Override
     protected void onSaveInstanceState(final Bundle outState) {
         super.onSaveInstanceState(outState);
         if (getSupportFragmentManager() == gridFragment.getFragmentManager()) {
@@ -86,12 +93,8 @@ public class MainActivity extends AppCompatActivity implements MoviesGridFragmen
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             startActivity(SettingsActivity.launchSettingsIntent(this));
             return true;
@@ -99,20 +102,11 @@ public class MainActivity extends AppCompatActivity implements MoviesGridFragmen
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        final String sortOrder = getSortOrder();
-        // update the location in our second pane using the fragment manager
-        if (!sortOrder.equals(mSortOrder)) {
-            mSortOrder = sortOrder;
-            getSupportFragmentManager().beginTransaction().replace(R.id.container, getFragment(sortOrder), null).commit();
-            if (useTabletLayout) {
-                getSupportFragmentManager().beginTransaction().replace(R.id.detail_container, new MovieDetailsFragment(), null).commit();
-            }
-        }
-    }
-
+    /**
+     * Gets the current sort order from preferences.
+     *
+     * @return the selection of movies to be shown.
+     */
     private String getSortOrder() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         return prefs.getString(
@@ -120,6 +114,12 @@ public class MainActivity extends AppCompatActivity implements MoviesGridFragmen
                 getString(R.string.pref_sort_by_popularity));
     }
 
+    /**
+     * Creates an instance of one of the subclasses of MoviesGridFragment depending on the sort order.
+     *
+     * @param  sortOrder the current sort order.
+     * @return a fragment that matches the sort order.
+     */
     private Fragment getFragment(final String sortOrder) {
         switch (sortOrder) {
             case SORT_BY_FAVORITE:
@@ -138,10 +138,8 @@ public class MainActivity extends AppCompatActivity implements MoviesGridFragmen
         if (useTabletLayout) {
             Bundle args = new Bundle();
             args.putParcelable(MovieDetailsFragment.DETAIL_URI, movieUri);
-
             MovieDetailsFragment fragment = new MovieDetailsFragment();
             fragment.setArguments(args);
-
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.detail_container, fragment, null)
                     .commit();

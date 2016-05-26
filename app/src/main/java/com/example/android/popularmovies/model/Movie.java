@@ -36,18 +36,6 @@ public class Movie implements Parcelable {
         return new Builder();
     }
 
-    public static Builder newBuilder(final Movie copy) {
-        Builder builder = new Builder();
-        builder.id = copy.id;
-        builder.title = copy.title;
-        builder.poster_path = copy.poster_path;
-        builder.overview = copy.overview;
-        builder.vote_average = copy.vote_average;
-        builder.release_date = copy.release_date;
-        return builder;
-    }
-
-
     public int getId() {
         return id;
     }
@@ -221,12 +209,14 @@ public class Movie implements Parcelable {
     }
 
     /**
-     * .
+     * Checks if the {@code Movie} in the favorite movies table.
      *
-     * @return the String to be shown on MovieDetailsFragment
+     * @param context the context needed to create a readable database.
+     * @return true if the {@code Movie} exists in the database, false if it doesn't.
      */
     public boolean isFavorite(Context context) {
-        final SQLiteDatabase db = com.example.android.popularmovies.data.provider.MoviesDatabase.getInstance(context).getReadableDatabase();
+        final SQLiteDatabase db = com.example.android.popularmovies.data.provider.MoviesDatabase
+                .getInstance(context).getReadableDatabase();
         return DatabaseUtils.longForQuery(
                 db,
                 "select count(*) from "

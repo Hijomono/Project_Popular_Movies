@@ -25,7 +25,7 @@ public class FavoriteMoviesFragment extends MoviesGridFragment {
     protected void syncIfDataMissing(final Cursor data) {}
 
     @Override
-    protected void makeCallback(int movieCursorId) {
-        ((Callback) getActivity()).onItemSelected(MoviesProvider.FavoriteMovies.withId(movieCursorId));
+    protected void makeCallback(int movieId) {
+        ((Callback) getActivity()).onItemSelected(MoviesProvider.FavoriteMovies.withId(movieId));
     }
 }

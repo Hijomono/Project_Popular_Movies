@@ -11,11 +11,11 @@ public class MyListItem {
     private String posterPath;
     private int movieId;
 
-    public void setPosterPath(String posterPath) {
+    private void setPosterPath(String posterPath) {
         this.posterPath = posterPath;
     }
 
-    public void setMovieId(int movieId) {
+    private void setMovieId(int movieId) {
         this.movieId = movieId;
     }
 

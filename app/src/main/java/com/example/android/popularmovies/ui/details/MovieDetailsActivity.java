@@ -14,8 +14,6 @@ public class MovieDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_movie_details);
 
         if (savedInstanceState == null) {
-            // Create the detail fragment and add it to the activity
-            // using a fragment transaction.
 
             Bundle arguments = new Bundle();
             arguments.putParcelable(MovieDetailsFragment.DETAIL_URI, getIntent().getData());

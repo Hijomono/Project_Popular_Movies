@@ -68,6 +68,16 @@ public class MoviesStorage implements MoviesRepository {
         );
     }
 
+    @Override
+    public void deleteUnusedPosters() {
+        ContextWrapper cw = new ContextWrapper(context);
+        File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
+        String[] posterNames = directory.list();
+        for (String posterName : posterNames) {
+            deleteIfUnused(directory, posterName);
+        }
+    }
+
     /**
      * Take a list of movies and inserts it into a table of the database
      * after deleting its previous content.
@@ -102,6 +112,12 @@ public class MoviesStorage implements MoviesRepository {
         savePosters(tableUri, list);
     }
 
+    /**
+     * Take a list of {@code Movie} and calls savePoster on each one of them.
+     *
+     * @param tableUri  The Uri where the poster files' paths must be inserted.
+     * @param movieList The list of {@code Movie} whose posters must be stored.
+     */
     private void savePosters(final Uri tableUri, final List<Movie> movieList) {
         for (int i = 0; i < movieList.size(); i++) {
             Movie movie = movieList.get(i);
@@ -109,6 +125,13 @@ public class MoviesStorage implements MoviesRepository {
         }
     }
 
+    /**
+     * Loads a {@code Movie} poster image into a file if it doesn't exist already
+     * and updates poster_path column to that file URI.
+     *
+     * @param tableUri  The Uri where the poster file path must be inserted.
+     * @param movie The {@code Movie} whose poster must be stored.
+     */
     private void savePoster(final Uri tableUri, final Movie movie) {
         final Target target = new Target() {
             @Override
@@ -143,6 +166,13 @@ public class MoviesStorage implements MoviesRepository {
         Picasso.with(context).load(movie.getPicassoUri()).into(target);
     }
 
+    /**
+     * Updates poster_path column to the URI of the stored image file.
+     *
+     * @param tableUri  The Uri where the poster file path must be inserted.
+     * @param movie     The {@code Movie} whose poster must be stored.
+     * @param posterUri The Uri of the image file to be inserted.
+     */
     private void updateMoviePoster(final Uri tableUri, final Movie movie, final Uri posterUri) {
         ContentValues moviePosterValue = new ContentValues();
         moviePosterValue.put(MoviesColumns.POSTER_PATH, posterUri.toString());
@@ -155,17 +185,12 @@ public class MoviesStorage implements MoviesRepository {
                 selectionArgs);
     }
 
-    //Method to delete poster images from movies not present in any database
-    public void deleteUnusedPosters() {
-        ContextWrapper cw = new ContextWrapper(context);
-        File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
-        String[] posterNames = directory.list();
-        for (String posterName : posterNames) {
-            deleteIfUnused(directory, posterName);
-        }
-    }
-
-    //Method to delete a single poster image if its movie does not exist in the database
+    /**
+     * Deletes a poster file if its URI does not exist in the database.
+     *
+     * @param directory  The directory where the poster file is stored.
+     * @param posterName The name of the image file to be checked.
+     */
     private void deleteIfUnused(final File directory, final String posterName) {
         final String dirPath = "file:///data/data/com.example.android.popularmovies/app_imageDir/";
         String fullPosterPath = dirPath + posterName;
@@ -175,14 +200,25 @@ public class MoviesStorage implements MoviesRepository {
         }
     }
 
-    //Method to determine if a movie exists in any database
+    /**
+     * Checks if the URI of a poster image exists in the database.
+     *
+     * @param posterPath The Uri of the image file to be checked.
+     * @return true if the poster URI exists in the database, false if it doesn't.
+     */
     private boolean posterExistsInDatabase(final String posterPath) {
         return movieIsPopular(posterPath) || movieIsTopRated(posterPath) || movieIsFavorite(posterPath);
     }
 
-    //Method to determine if a movie exists in popular
+    /**
+     * Checks if the URI of a poster image exists in the popular movies table.
+     *
+     * @param posterPath The Uri of the image file to be checked.
+     * @return true if the poster URI exists in the database, false if it doesn't.
+     */
     private boolean movieIsPopular(final String posterPath) {
-        final SQLiteDatabase db = com.example.android.popularmovies.data.provider.MoviesDatabase.getInstance(context).getReadableDatabase();
+        final SQLiteDatabase db = com.example.android.popularmovies.data.provider.MoviesDatabase
+                .getInstance(context).getReadableDatabase();
         return DatabaseUtils.longForQuery(
                 db,
                 "select count(*) from "
@@ -194,9 +230,15 @@ public class MoviesStorage implements MoviesRepository {
         ) > 0;
     }
 
-    //Method to determine if a movie exists in top rated
+    /**
+     * Checks if the URI of a poster image exists in the top rated movies table.
+     *
+     * @param posterPath The Uri of the image file to be checked.
+     * @return true if the poster URI exists in the database, false if it doesn't.
+     */
     private boolean movieIsTopRated(final String posterPath) {
-        final SQLiteDatabase db = com.example.android.popularmovies.data.provider.MoviesDatabase.getInstance(context).getReadableDatabase();
+        final SQLiteDatabase db = com.example.android.popularmovies.data.provider.MoviesDatabase
+                .getInstance(context).getReadableDatabase();
         return DatabaseUtils.longForQuery(
                 db,
                 "select count(*) from "
@@ -208,9 +250,15 @@ public class MoviesStorage implements MoviesRepository {
         ) > 0;
     }
 
-    //Method to determine if a movie exists in favorites
+    /**
+     * Checks if the URI of a poster image exists in the favorite movies table.
+     *
+     * @param posterPath The Uri of the image file to be checked.
+     * @return true if the poster URI exists in the database, false if it doesn't.
+     */
     private boolean movieIsFavorite(final String posterPath) {
-        final SQLiteDatabase db = com.example.android.popularmovies.data.provider.MoviesDatabase.getInstance(context).getReadableDatabase();
+        final SQLiteDatabase db = com.example.android.popularmovies.data.provider.MoviesDatabase
+                .getInstance(context).getReadableDatabase();
         return DatabaseUtils.longForQuery(
                 db,
                 "select count(*) from "

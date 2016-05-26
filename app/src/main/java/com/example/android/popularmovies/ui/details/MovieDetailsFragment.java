@@ -51,7 +51,6 @@ import retrofit2.Response;
  */
 public class MovieDetailsFragment extends Fragment implements android.support.v4.app.LoaderManager.LoaderCallbacks<Cursor> {
 
-    public static final String LOG_TAG = MovieDetailsFragment.class.getSimpleName();
     public static final String DETAIL_URI = "URI";
 
     private static final int MOVIES_LOADER = 1;
@@ -103,14 +102,11 @@ public class MovieDetailsFragment extends Fragment implements android.support.v4
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         moviesRepository = new MoviesStorage(getActivity());
-
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         Bundle arguments = getArguments();
         View rootView;
         if (arguments != null) {
@@ -120,8 +116,21 @@ public class MovieDetailsFragment extends Fragment implements android.support.v4
         } else {
             rootView = inflater.inflate(R.layout.fragment_movie_details_empty, container, false);
         }
-
         return rootView;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        getLoaderManager().initLoader(MOVIES_LOADER, null, this);
+    }
+
+    @Override
+    public void onDestroyView() {
+        if (selectedMovieUri != null) {
+            unbinder.unbind();
+        }
+        super.onDestroyView();
     }
 
     @Override
@@ -129,9 +138,6 @@ public class MovieDetailsFragment extends Fragment implements android.support.v4
         inflater.inflate(R.menu.menu_movie_details_fragment, menu);
         MenuItem shareItem = menu.findItem(R.id.menu_item_share);
         ShareActionProvider detailShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(shareItem);
-
-        // Attach an intent to this ShareActionProvider.  You can update this at any time,
-        // like when the user selects a new piece of data they might like to share.
         if (trailersAdapter.getCount() != 0) {
             shareItem.setVisible(true);
             detailShareActionProvider.setShareIntent(createShareFirstTrailerIntent());
@@ -140,20 +146,18 @@ public class MovieDetailsFragment extends Fragment implements android.support.v4
         }
     }
 
+    /**
+     * Creates an intent to share the youtube URL of the first trailer in the list
+     * returned by fetchMovieTrailers.
+     *
+     * @return an intent to share the first trailer URL.
+     */
     private Intent createShareFirstTrailerIntent() {
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
         shareIntent.setType("text/plain");
         shareIntent.putExtra(Intent.EXTRA_TEXT, trailersAdapter.getItem(0).getYoutubeUri().toString());
         return shareIntent;
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        if (selectedMovieUri != null) {
-            unbinder.unbind();
-        }
     }
 
     /**
@@ -242,8 +246,8 @@ public class MovieDetailsFragment extends Fragment implements android.support.v4
     }
 
     /**
-     * Calls favMovie or unfavMovie depending on the current movie being favorite or not
-     * and changes the drawable resource for favButton.
+     * Adds or removes the selected movie from favorites and
+     * changes the drawable resource for favButton.
      */
     @OnClick(R.id.detail_fav_button)
     public void onFavButtonClicked() {
@@ -257,16 +261,8 @@ public class MovieDetailsFragment extends Fragment implements android.support.v4
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        getLoaderManager().initLoader(MOVIES_LOADER, null, this);
-        super.onActivityCreated(savedInstanceState);
-    }
-
-    @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         if (null != selectedMovieUri) {
-// Now create and return a CursorLoader that will take care of
-            // creating a Cursor for the data being displayed.
             return new CursorLoader(
                     getActivity(),
                     selectedMovieUri,
@@ -293,6 +289,11 @@ public class MovieDetailsFragment extends Fragment implements android.support.v4
     public void onLoaderReset(Loader<Cursor> cursorLoader) {
     }
 
+    /**
+     * Creates a {@code Movie} object from a cursor.
+     *
+     * @param movieCursor the cursor retrieved by the loader.
+     */
     private Movie movieOutOfCursor(Cursor movieCursor) {
         return Movie.newBuilder()
                 .id(movieCursor.getInt(movieCursor.getColumnIndex(MoviesColumns.MOVIE_ID)))
@@ -304,6 +305,9 @@ public class MovieDetailsFragment extends Fragment implements android.support.v4
                 .build();
     }
 
+    /**
+     * Displays the details of the current movie in the UI.
+     */
     private void displayMovieDetails() {
         title.setText(selectedMovie.getTitle());
         Picasso.with(getContext()).load(selectedMovie.getPoster_path()).into(poster);
@@ -315,6 +319,10 @@ public class MovieDetailsFragment extends Fragment implements android.support.v4
         }
     }
 
+    /**
+     * Loads the trailers for the current movie, populates the trailers list view with them
+     * and adds a click listener to launch them with Youtube.
+     */
     private void fillTrailerList() {
         fetchMovieTrailers();
         trailersAdapter = new TrailersAdapter(
@@ -330,13 +338,14 @@ public class MovieDetailsFragment extends Fragment implements android.support.v4
                 Intent intent = new Intent(Intent.ACTION_VIEW, trailerClicked.getYoutubeUri());
                 if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
                     startActivity(intent);
-                } else {
-                    Log.d(LOG_TAG, "Couldn't call " + trailerClicked.getYoutubeUri() + ", no receiving apps installed!");
                 }
             }
         });
     }
 
+    /**
+     * Loads the reviews for the current movie and populates the reviews list view with them.
+     */
     private void fillReviewList() {
         fetchMovieReviews();
         reviewsAdapter = new ReviewsAdapter(
