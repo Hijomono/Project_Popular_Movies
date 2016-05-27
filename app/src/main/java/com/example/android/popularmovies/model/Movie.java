@@ -3,8 +3,6 @@ package com.example.android.popularmovies.model;
 import android.content.Context;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.Parcel;
-import android.os.Parcelable;
 
 import com.example.android.popularmovies.data.database.MoviesColumns;
 import com.example.android.popularmovies.data.database.MoviesDatabase;
@@ -12,7 +10,7 @@ import com.example.android.popularmovies.data.database.MoviesDatabase;
 /**
  * Created by debeyo on 03/03/2016.
  */
-public class Movie implements Parcelable {
+public class Movie {
 
     private static final String BASE_PICASSO_URL = "http://image.tmdb.org/t/p/w185";
 
@@ -59,46 +57,6 @@ public class Movie implements Parcelable {
     public String getRelease_date() {
         return release_date;
     }
-
-    private Movie(Parcel in) {
-        id = in.readInt();
-        title = in.readString();
-        poster_path = in.readString();
-        overview = in.readString();
-        vote_average = in.readString();
-        release_date = in.readString();
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    public String toString() {
-        return id + "--" + title + "--" + poster_path + "--" + overview + "--" + vote_average + "--" + release_date;
-    }
-
-    @Override
-    public void writeToParcel(final Parcel parcel, final int i) {
-        parcel.writeInt(id);
-        parcel.writeString(title);
-        parcel.writeString(poster_path);
-        parcel.writeString(overview);
-        parcel.writeString(vote_average);
-        parcel.writeString(release_date);
-    }
-
-    public static final Creator<Movie> CREATOR = new Creator<Movie>() {
-        @Override
-        public Movie createFromParcel(final Parcel parcel) {
-            return new Movie(parcel);
-        }
-
-        @Override
-        public Movie[] newArray(final int i) {
-            return new Movie[i];
-        }
-    };
 
     /**
      * {@code Movie} builder static inner class.
