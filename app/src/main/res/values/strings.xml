@@ -5,18 +5,31 @@
     <string name="title_activity_settings">Settings</string>
     <string name="title_activity_movie_details">Movie Details</string>
 
-    <!-- Strings used to create image URLs to be loaded with Picasso -->
-
-    <string name="base_picasso_url">http://image.tmdb.org/t/p/</string>
-    <string name="picasso_w185_size">w185</string>
-
     <!-- Strings related to Settings -->
-
     <string name="pref_sort_by_label">Sort by</string>
     <string name="pref_sort_by_key" translatable="false">sort_by</string>
     <string name="pref_sort_by_popularity" translatable="false">popular</string>
     <string name="pref_sort_by_rating" translatable="false">top_rated</string>
+    <string name="pref_sort_by_favorite" translatable="false">favorite</string>
     <string name="pref_popularity_label">Popularity</string>
     <string name="pref_rating_label">User rating</string>
+    <string name="pref_favorite_label">Favorites</string>
+    
+    <string name="pref_share_title">Share</string>
+    <string name="pref_share_no_trailer_available">There are no trailers to share for this movie.</string>
+
+    <!-- Headers for the trailer and review lists in movie details -->
+    <string name="trailers_header">Trailers:</string>
+    <string name="trailers_header_empty">There are no trailers available for this movie yet.</string>
+    <string name="trailers_header_no_internet">You need to be online to see movie trailers.</string>
+    <string name="reviews_header">Reviews:</string>
+    <string name="reviews_header_empty">There are no reviews available for this movie yet.</string>
+    <string name="reviews_header_no_internet">You need to be online to see movie reviews.</string>
+
+    <string name="empty_details_text">Select a movie</string>
+
+    <!-- Strings related to SyncAdapter -->
+    <string name="sync_account_type">popularmovies.example.com</string>
+    <string name="content_authority">com.example.android.popularmovies</string>
 
 </resources>
