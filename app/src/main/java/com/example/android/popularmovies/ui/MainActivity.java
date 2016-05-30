@@ -10,28 +10,26 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.FrameLayout;
 
-import com.example.android.popularmovies.ui.moviesgrid.FavoriteMoviesFragment;
+import com.example.android.popularmovies.R;
+import com.example.android.popularmovies.data.sync.MoviesSyncAdapter;
 import com.example.android.popularmovies.ui.details.MovieDetailsActivity;
 import com.example.android.popularmovies.ui.details.MovieDetailsFragment;
+import com.example.android.popularmovies.ui.moviesgrid.FavoriteMoviesFragment;
 import com.example.android.popularmovies.ui.moviesgrid.MoviesGridFragment;
 import com.example.android.popularmovies.ui.moviesgrid.PopularMoviesFragment;
-import com.example.android.popularmovies.R;
-import com.example.android.popularmovies.ui.settings.SettingsActivity;
 import com.example.android.popularmovies.ui.moviesgrid.TopRatedMoviesFragment;
-import com.example.android.popularmovies.data.sync.MoviesSyncAdapter;
+import com.example.android.popularmovies.ui.settings.SettingsActivity;
 
-import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity implements MoviesGridFragment.Callback {
 
     private static final String SORT_BY_FAVORITE = "favorite";
     private static final String SORT_BY_POPULARITY = "popular";
     private static final String SORT_BY_TOP_RATED = "top_rated";
+    private static final String FRAGMRNT_KEY = "gridFragment";
 
-    @BindView(R.id.container)
-    protected FrameLayout container;
     private String mSortOrder;
     private boolean useTabletLayout;
     private Fragment gridFragment;
@@ -51,12 +49,11 @@ public class MainActivity extends AppCompatActivity implements MoviesGridFragmen
         } else {
             useTabletLayout = false;
         }
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        setSupportActionBar(ButterKnife.<Toolbar>findById(this, R.id.toolbar));
         if(savedInstanceState == null) {
             gridFragment = getFragment(mSortOrder);
         } else {
-            gridFragment = getSupportFragmentManager().getFragment(savedInstanceState, "gridFragment");
+            gridFragment = getSupportFragmentManager().getFragment(savedInstanceState, FRAGMRNT_KEY);
         }
         getSupportFragmentManager().beginTransaction().replace(R.id.container, gridFragment, null).commit();
 
@@ -81,7 +78,7 @@ public class MainActivity extends AppCompatActivity implements MoviesGridFragmen
     protected void onSaveInstanceState(final Bundle outState) {
         super.onSaveInstanceState(outState);
         if (getSupportFragmentManager() == gridFragment.getFragmentManager()) {
-            getSupportFragmentManager().putFragment(outState, "gridFragment", gridFragment);
+            getSupportFragmentManager().putFragment(outState, FRAGMRNT_KEY, gridFragment);
         }
     }
 
