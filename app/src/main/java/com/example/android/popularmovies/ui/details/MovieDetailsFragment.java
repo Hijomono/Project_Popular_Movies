@@ -192,14 +192,7 @@ public class MovieDetailsFragment extends Fragment implements android.support.v4
                         trailersAdapter.addAll(trailerList);
                     }
                 } catch (NullPointerException e) {
-                    Toast toast = null;
-                    if (response.code() == 401) {
-                        toast = Toast.makeText(getActivity(), "Unauthenticated", Toast.LENGTH_SHORT);
-                    } else if (response.code() >= 400) {
-                        toast = Toast.makeText(getActivity(), "Client Error " + response.code()
-                                + " " + response.message(), Toast.LENGTH_SHORT);
-                    }
-                    toast.show();
+                    handleError(response.code(), response.message());
                 }
                 // This is called here so trailersAdapter.getItem(0)
                 // returns the trailer needed in createFirstTrailerIntent.
@@ -236,14 +229,7 @@ public class MovieDetailsFragment extends Fragment implements android.support.v4
                         reviewsAdapter.addAll(reviewList);
                     }
                 } catch (NullPointerException e) {
-                    Toast toast = null;
-                    if (response.code() == 401) {
-                        toast = Toast.makeText(getActivity(), "Unauthenticated", Toast.LENGTH_SHORT);
-                    } else if (response.code() >= 400) {
-                        toast = Toast.makeText(getActivity(), "Client Error " + response.code()
-                                + " " + response.message(), Toast.LENGTH_SHORT);
-                    }
-                    toast.show();
+                    handleError(response.code(), response.message());
                 }
             }
 
@@ -255,6 +241,15 @@ public class MovieDetailsFragment extends Fragment implements android.support.v4
                 }
             }
         });
+    }
+
+    private void handleError(final int code, final String message) {
+        if (code == 401) {
+            Toast.makeText(getActivity(), "Unauthenticated", Toast.LENGTH_SHORT).show();
+        } else if (code >= 400) {
+            Toast.makeText(getActivity(), "Client Error " + code
+                    + " " + message, Toast.LENGTH_SHORT).show();
+        }
     }
 
     /**

@@ -6,6 +6,8 @@ import android.support.v7.widget.Toolbar;
 
 import com.example.android.popularmovies.R;
 
+import butterknife.ButterKnife;
+
 public class MovieDetailsActivity extends AppCompatActivity {
 
     @Override
@@ -25,8 +27,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
                     .add(R.id.detail_container, fragment)
                     .commit();
         }
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        setSupportActionBar(ButterKnife.<Toolbar>findById(this, R.id.toolbar));;
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
