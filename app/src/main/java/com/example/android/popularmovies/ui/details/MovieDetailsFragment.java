@@ -42,6 +42,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import hugo.weaving.DebugLog;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -97,7 +98,10 @@ public class MovieDetailsFragment extends Fragment implements android.support.v4
     private Movie selectedMovie;
     private Uri selectedMovieUri;
     private MoviesRepository moviesRepository;
+    private Call<FetchedReviewsList> reviewsCall;
+    private Call<FetchedTrailersList> trailersCall;
 
+    @DebugLog
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -129,6 +133,12 @@ public class MovieDetailsFragment extends Fragment implements android.support.v4
     public void onDestroyView() {
         if (selectedMovieUri != null) {
             unbinder.unbind();
+        }
+        if (trailersCall != null) {
+            trailersCall.cancel();
+        }
+        if (reviewsCall != null) {
+            reviewsCall.cancel();
         }
         super.onDestroyView();
     }
@@ -164,7 +174,6 @@ public class MovieDetailsFragment extends Fragment implements android.support.v4
      * Calls for trailers for the selected movie and populates trailerListView with them.
      */
     private void fetchMovieTrailers() {
-        Call<FetchedTrailersList> trailersCall;
         trailersCall = ServiceProvider.fetchMoviesService().getTrailerList(
                 selectedMovie.getId(),
                 BuildConfig.THE_MOVIE_DB_API_KEY);
@@ -199,8 +208,10 @@ public class MovieDetailsFragment extends Fragment implements android.support.v4
 
             @Override
             public void onFailure(final Call<FetchedTrailersList> call, final Throwable t) {
-                Log.e("getTrailerList threw: ", t.getMessage());
-                trailersHeader.setText(R.string.trailers_header_no_internet);
+                if (!trailersCall.isCanceled()) {
+                    Log.e("getTrailerList threw: ", t.getMessage());
+                    trailersHeader.setText(R.string.trailers_header_no_internet);
+                }
             }
         });
     }
@@ -209,7 +220,6 @@ public class MovieDetailsFragment extends Fragment implements android.support.v4
      * Calls for reviews for the selected movie and populates reviewListView with them.
      */
     private void fetchMovieReviews() {
-        Call<FetchedReviewsList> reviewsCall;
         reviewsCall = ServiceProvider.fetchMoviesService().getReviewList(
                 selectedMovie.getId(),
                 BuildConfig.THE_MOVIE_DB_API_KEY);
@@ -239,8 +249,10 @@ public class MovieDetailsFragment extends Fragment implements android.support.v4
 
             @Override
             public void onFailure(final Call<FetchedReviewsList> call, final Throwable t) {
-                Log.e("getReviewList threw: ", t.getMessage());
-                reviewsHeader.setText(R.string.reviews_header_no_internet);
+                if (!reviewsCall.isCanceled()) {
+                    Log.e("getReviewList threw: ", t.getMessage());
+                    reviewsHeader.setText(R.string.reviews_header_no_internet);
+                }
             }
         });
     }
