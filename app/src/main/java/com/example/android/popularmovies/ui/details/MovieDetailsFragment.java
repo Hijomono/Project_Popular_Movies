@@ -30,9 +30,9 @@ import com.example.android.popularmovies.data.network.FetchedTrailersList;
 import com.example.android.popularmovies.data.network.ServiceProvider;
 import com.example.android.popularmovies.data.repository.MoviesRepository;
 import com.example.android.popularmovies.data.repository.MoviesStorage;
-import com.example.android.popularmovies.model.Movie;
-import com.example.android.popularmovies.model.Review;
-import com.example.android.popularmovies.model.Trailer;
+import com.example.android.popularmovies.domain.model.Movie;
+import com.example.android.popularmovies.domain.model.Review;
+import com.example.android.popularmovies.domain.model.Trailer;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;

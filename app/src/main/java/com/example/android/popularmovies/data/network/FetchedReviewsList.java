@@ -1,6 +1,6 @@
 package com.example.android.popularmovies.data.network;
 
-import com.example.android.popularmovies.model.Review;
+import com.example.android.popularmovies.domain.model.Review;
 
 import java.util.List;
 

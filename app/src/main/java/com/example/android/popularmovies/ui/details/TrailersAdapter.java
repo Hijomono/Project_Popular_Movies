@@ -8,7 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.example.android.popularmovies.R;
-import com.example.android.popularmovies.model.Trailer;
+import com.example.android.popularmovies.domain.model.Trailer;
 
 import java.util.List;
 

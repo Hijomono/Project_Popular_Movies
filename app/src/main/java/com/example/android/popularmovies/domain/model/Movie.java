@@ -1,4 +1,4 @@
-package com.example.android.popularmovies.model;
+package com.example.android.popularmovies.domain.model;
 
 import android.content.Context;
 import android.database.DatabaseUtils;

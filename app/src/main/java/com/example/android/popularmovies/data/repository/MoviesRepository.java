@@ -1,6 +1,6 @@
 package com.example.android.popularmovies.data.repository;
 
-import com.example.android.popularmovies.model.Movie;
+import com.example.android.popularmovies.domain.model.Movie;
 
 import java.util.List;
 

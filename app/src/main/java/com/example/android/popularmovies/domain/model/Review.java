@@ -1,4 +1,4 @@
-package com.example.android.popularmovies.model;
+package com.example.android.popularmovies.domain.model;
 
 /**
  * Created by debeyo on 01/05/2016.
