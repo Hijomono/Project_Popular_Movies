@@ -15,12 +15,11 @@ import android.view.ViewGroup;
 
 import com.example.android.popularmovies.R;
 import com.example.android.popularmovies.data.database.MoviesColumns;
-import com.squareup.picasso.Picasso;
 
 /**
  * A placeholder fragment containing the grid view where the movie posters will be displayed.
  */
-public abstract class MoviesGridFragment extends Fragment implements android.support.v4.app.LoaderManager.LoaderCallbacks<Cursor> {
+public abstract class MoviesGridFragment extends Fragment implements android.support.v4.app.LoaderManager.LoaderCallbacks<Cursor>, MovieSelectedListener {
 
     private static final int MOVIES_LOADER = 0;
     private static final String[] MOVIES_COLUMNS = {
@@ -40,23 +39,7 @@ public abstract class MoviesGridFragment extends Fragment implements android.sup
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        moviesGridAdapter = new MoviesCursorAdapter(getActivity(), null) {
-            @Override
-            public void onBindViewHolder(final ViewHolder viewHolder, final Cursor cursor) {
-                super.onBindViewHolder(viewHolder, cursor);
-                final MyListItem myListItem = MyListItem.fromCursor(cursor);
-                viewHolder.moviePosterView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(final View v) {
-                        makeCallback(myListItem.getMovieId());
-                    }
-                });
-                Picasso.with(getActivity())
-                        .load(myListItem.getPosterPath())
-                        .into(viewHolder.moviePosterView);
-
-            }
-        };
+        moviesGridAdapter = new MoviesCursorAdapter(getActivity(), null, this);
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         gridView = (RecyclerView) rootView.findViewById(R.id.movies_grid);
         gridView.setLayoutManager(new GridLayoutManager(
@@ -105,13 +88,6 @@ public abstract class MoviesGridFragment extends Fragment implements android.sup
      * @param data the cursor retrieved by the loader.
      */
     protected abstract void syncIfDataMissing(Cursor data);
-
-    /**
-     * Calls onItemClicked with an inexact URI that matches the fragment class.
-     *
-     * @param movieId the id of the movie clicked.
-     */
-    protected abstract void makeCallback(int movieId);
 
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {

@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.example.android.popularmovies.R;
+import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -17,6 +18,8 @@ import butterknife.ButterKnife;
  * Created by debeyo on 13/05/2016.
  */
 public class MoviesCursorAdapter extends CursorRecyclerViewAdapter<MoviesCursorAdapter.ViewHolder> {
+
+    private final MovieSelectedListener listener;
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.list_item_poster)
@@ -28,8 +31,9 @@ public class MoviesCursorAdapter extends CursorRecyclerViewAdapter<MoviesCursorA
         }
     }
 
-    public MoviesCursorAdapter(Context context, Cursor c) {
+    public MoviesCursorAdapter(Context context, Cursor c, final MovieSelectedListener listener) {
         super(context, c);
+        this.listener = listener;
     }
 
     @Override
@@ -41,5 +45,15 @@ public class MoviesCursorAdapter extends CursorRecyclerViewAdapter<MoviesCursorA
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, Cursor cursor) {
+        final MyListItem myListItem = MyListItem.fromCursor(cursor);
+        viewHolder.moviePosterView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+                listener.makeCallback(myListItem.getMovieId());
+            }
+        });
+        Picasso.with(viewHolder.itemView.getContext())
+                .load(myListItem.getPosterPath())
+                .into(viewHolder.moviePosterView);
     }
 }
