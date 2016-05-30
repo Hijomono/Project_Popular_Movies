@@ -28,7 +28,7 @@ import com.example.android.popularmovies.data.database.MoviesColumns;
 import com.example.android.popularmovies.data.network.FetchedReviewsList;
 import com.example.android.popularmovies.data.network.FetchedTrailersList;
 import com.example.android.popularmovies.data.network.ServiceProvider;
-import com.example.android.popularmovies.data.repository.MoviesRepository;
+import com.example.android.popularmovies.domain.repository.MoviesRepository;
 import com.example.android.popularmovies.data.repository.MoviesStorage;
 import com.example.android.popularmovies.domain.model.Movie;
 import com.example.android.popularmovies.domain.model.Review;

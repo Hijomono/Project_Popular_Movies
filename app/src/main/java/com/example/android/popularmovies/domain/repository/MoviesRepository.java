@@ -1,4 +1,4 @@
-package com.example.android.popularmovies.data.repository;
+package com.example.android.popularmovies.domain.repository;
 
 import com.example.android.popularmovies.domain.model.Movie;
 

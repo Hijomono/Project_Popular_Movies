@@ -17,7 +17,7 @@ import com.example.android.popularmovies.R;
 import com.example.android.popularmovies.data.network.FetchedMoviesList;
 import com.example.android.popularmovies.data.network.ServiceProvider;
 import com.example.android.popularmovies.data.network.TheMovieDBService;
-import com.example.android.popularmovies.data.repository.MoviesRepository;
+import com.example.android.popularmovies.domain.repository.MoviesRepository;
 import com.example.android.popularmovies.data.repository.MoviesStorage;
 
 import retrofit2.Call;

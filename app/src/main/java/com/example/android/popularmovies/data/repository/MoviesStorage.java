@@ -13,6 +13,7 @@ import com.example.android.popularmovies.data.database.MoviesColumns;
 import com.example.android.popularmovies.data.database.MoviesDatabase;
 import com.example.android.popularmovies.data.database.MoviesProvider;
 import com.example.android.popularmovies.domain.model.Movie;
+import com.example.android.popularmovies.domain.repository.MoviesRepository;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
