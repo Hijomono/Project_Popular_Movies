@@ -310,10 +310,10 @@ public class MovieDetailsFragment extends Fragment implements android.support.v4
         return Movie.newBuilder()
                 .id(movieCursor.getInt(movieCursor.getColumnIndex(MoviesColumns.MOVIE_ID)))
                 .title(movieCursor.getString(movieCursor.getColumnIndex(MoviesColumns.TITLE)))
-                .poster_path(movieCursor.getString(movieCursor.getColumnIndex(MoviesColumns.POSTER_PATH)))
+                .posterPath(movieCursor.getString(movieCursor.getColumnIndex(MoviesColumns.POSTER_PATH)))
                 .overview(movieCursor.getString(movieCursor.getColumnIndex(MoviesColumns.OVERVIEW)))
-                .vote_average(movieCursor.getString(movieCursor.getColumnIndex(MoviesColumns.RATING)))
-                .release_date(movieCursor.getString(movieCursor.getColumnIndex(MoviesColumns.RELEASE_DATE)))
+                .voteAverage(movieCursor.getString(movieCursor.getColumnIndex(MoviesColumns.RATING)))
+                .releaseDate(movieCursor.getString(movieCursor.getColumnIndex(MoviesColumns.RELEASE_DATE)))
                 .build();
     }
 
@@ -322,8 +322,8 @@ public class MovieDetailsFragment extends Fragment implements android.support.v4
      */
     private void displayMovieDetails() {
         title.setText(selectedMovie.getTitle());
-        Picasso.with(getContext()).load(selectedMovie.getPoster_path()).into(poster);
-        releaseDate.setText(selectedMovie.getRelease_date());
+        Picasso.with(getContext()).load(selectedMovie.getPosterPath()).into(poster);
+        releaseDate.setText(selectedMovie.getReleaseDate());
         rating.setText(selectedMovie.getRatingOutOfTen());
         overview.setText(selectedMovie.getOverview());
         if (selectedMovie.isFavorite(getActivity())) {

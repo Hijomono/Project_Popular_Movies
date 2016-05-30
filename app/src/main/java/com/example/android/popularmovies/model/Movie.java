@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.example.android.popularmovies.data.database.MoviesColumns;
 import com.example.android.popularmovies.data.database.MoviesDatabase;
+import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by debeyo on 03/03/2016.
@@ -16,18 +17,21 @@ public class Movie {
 
     private final int id;
     private final String title;
-    private final String poster_path;
+    @SerializedName("poster_path")
+    private final String posterPath;
     private final String overview;
-    private final String vote_average;
-    private final String release_date;
+    @SerializedName("vote_average")
+    private final String voteAverage;
+    @SerializedName("release_date")
+    private final String releaseDate;
 
     private Movie(final Builder builder) {
         id = builder.id;
         title = builder.title;
-        poster_path = builder.poster_path;
+        posterPath = builder.posterPath;
         overview = builder.overview;
-        vote_average = builder.vote_average;
-        release_date = builder.release_date;
+        voteAverage = builder.voteAverage;
+        releaseDate = builder.releaseDate;
     }
 
     public static Builder newBuilder() {
@@ -42,20 +46,20 @@ public class Movie {
         return title;
     }
 
-    public String getPoster_path() {
-        return poster_path;
+    public String getPosterPath() {
+        return posterPath;
     }
 
     public String getOverview() {
         return overview;
     }
 
-    public String getVote_average() {
-        return vote_average;
+    public String getVoteAverage() {
+        return voteAverage;
     }
 
-    public String getRelease_date() {
-        return release_date;
+    public String getReleaseDate() {
+        return releaseDate;
     }
 
     /**
@@ -64,10 +68,10 @@ public class Movie {
     public static final class Builder {
         private int id;
         private String title;
-        private String poster_path;
+        private String posterPath;
         private String overview;
-        private String vote_average;
-        private String release_date;
+        private String voteAverage;
+        private String releaseDate;
 
         private Builder() {
         }
@@ -95,13 +99,13 @@ public class Movie {
         }
 
         /**
-         * Sets the {@code poster_path} and returns a reference to this Builder so that the methods can be chained together.
+         * Sets the {@code posterPath} and returns a reference to this Builder so that the methods can be chained together.
          *
-         * @param val the {@code poster_path} to set
+         * @param val the {@code posterPath} to set
          * @return a reference to this Builder
          */
-        public Builder poster_path(final String val) {
-            poster_path = val;
+        public Builder posterPath(final String val) {
+            posterPath = val;
             return this;
         }
 
@@ -117,24 +121,24 @@ public class Movie {
         }
 
         /**
-         * Sets the {@code vote_average} and returns a reference to this Builder so that the methods can be chained together.
+         * Sets the {@code voteAverage} and returns a reference to this Builder so that the methods can be chained together.
          *
-         * @param val the {@code vote_average} to set
+         * @param val the {@code voteAverage} to set
          * @return a reference to this Builder
          */
-        public Builder vote_average(final String val) {
-            vote_average = val;
+        public Builder voteAverage(final String val) {
+            voteAverage = val;
             return this;
         }
 
         /**
-         * Sets the {@code release_date} and returns a reference to this Builder so that the methods can be chained together.
+         * Sets the {@code releaseDate} and returns a reference to this Builder so that the methods can be chained together.
          *
-         * @param val the {@code release_date} to set
+         * @param val the {@code releaseDate} to set
          * @return a reference to this Builder
          */
-        public Builder release_date(final String val) {
-            release_date = val;
+        public Builder releaseDate(final String val) {
+            releaseDate = val;
             return this;
         }
 
@@ -151,19 +155,19 @@ public class Movie {
     /**
      * Creates the Uri to be used by Picasso.
      *
-     * @return a Uri built with the {@code poster_path} of this {@code Movie}
+     * @return a Uri built with the {@code posterPath} of this {@code Movie}
      */
     public String getPicassoUri() {
-        return BASE_PICASSO_URL + poster_path;
+        return BASE_PICASSO_URL + posterPath;
     }
 
     /**
-     * Adds "/10" to {@code vote_average}.
+     * Adds "/10" to {@code voteAverage}.
      *
      * @return the String to be shown on MovieDetailsFragment
      */
     public String getRatingOutOfTen() {
-        return vote_average + "/10";
+        return voteAverage + "/10";
     }
 
     /**

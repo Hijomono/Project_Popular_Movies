@@ -50,10 +50,10 @@ public class MoviesStorage implements MoviesRepository {
         ContentValues movieValues = new ContentValues();
         movieValues.put(MoviesColumns.MOVIE_ID, movie.getId());
         movieValues.put(MoviesColumns.TITLE, movie.getTitle());
-        movieValues.put(MoviesColumns.POSTER_PATH, movie.getPoster_path());
+        movieValues.put(MoviesColumns.POSTER_PATH, movie.getPosterPath());
         movieValues.put(MoviesColumns.OVERVIEW, movie.getOverview());
-        movieValues.put(MoviesColumns.RATING, movie.getVote_average());
-        movieValues.put(MoviesColumns.RELEASE_DATE, movie.getRelease_date());
+        movieValues.put(MoviesColumns.RATING, movie.getVoteAverage());
+        movieValues.put(MoviesColumns.RELEASE_DATE, movie.getReleaseDate());
         context.getContentResolver().insert(
                 MoviesProvider.FavoriteMovies.CONTENT_URI,
                 movieValues);
@@ -95,8 +95,8 @@ public class MoviesStorage implements MoviesRepository {
             movieValues.put(MoviesColumns.TITLE, movie.getTitle());
             movieValues.put(MoviesColumns.POSTER_PATH, movie.getPicassoUri());
             movieValues.put(MoviesColumns.OVERVIEW, movie.getOverview());
-            movieValues.put(MoviesColumns.RATING, movie.getVote_average());
-            movieValues.put(MoviesColumns.RELEASE_DATE, movie.getRelease_date());
+            movieValues.put(MoviesColumns.RATING, movie.getVoteAverage());
+            movieValues.put(MoviesColumns.RELEASE_DATE, movie.getReleaseDate());
 
             moviesVector.add(movieValues);
         }
