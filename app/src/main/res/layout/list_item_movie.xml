@@ -6,4 +6,5 @@
     android:layout_height="wrap_content"
     android:adjustViewBounds="true"
     android:minHeight="?android:attr/listPreferredItemHeight"
-    android:scaleType="centerCrop"/>
+    android:scaleType="centerCrop"
+    android:background="@android:color/holo_orange_light"/>

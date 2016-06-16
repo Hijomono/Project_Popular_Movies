@@ -20,6 +20,8 @@ import butterknife.ButterKnife;
 public class MoviesCursorAdapter extends CursorRecyclerViewAdapter<MoviesCursorAdapter.ViewHolder> {
 
     private final MovieSelectedListener listener;
+    private int selectedMovieId;
+    private View selectedView;
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.list_item_poster)
@@ -46,14 +48,38 @@ public class MoviesCursorAdapter extends CursorRecyclerViewAdapter<MoviesCursorA
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, Cursor cursor) {
         final MyListItem myListItem = MyListItem.fromCursor(cursor);
+        if (selectedMovieId == myListItem.getMovieId()) {
+            select(viewHolder.itemView);
+        } else if (viewHolder.itemView == selectedView){
+            unSelect(viewHolder.itemView);
+        }
         viewHolder.moviePosterView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
-                listener.makeCallback(myListItem.getMovieId());
+                makeCLickedItemSelected(v);
+                selectedMovieId = myListItem.getMovieId();
+                listener.makeCallback(selectedMovieId);
             }
         });
         Picasso.with(viewHolder.itemView.getContext())
                 .load(myListItem.getPosterPath())
                 .into(viewHolder.moviePosterView);
+    }
+
+    private void makeCLickedItemSelected(View view) {
+        if (selectedView != null) {
+            unSelect(selectedView);
+        }
+       select(view);
+    }
+
+    private void select(final View view) {
+        selectedView = view;
+        selectedView.setPadding(10, 10, 10, 10);
+    }
+
+    private void unSelect(final View view) {
+        selectedView.setPadding(0, 0, 0, 0);
+        selectedView = null;
     }
 }
